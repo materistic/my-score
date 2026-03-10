@@ -5,44 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Humanity</title>
     <style>
-        :root {
-            --bg-color: #080a0f; /* Base Dark */
-            --aurora: hsla(167, 40%, 15%, 1);
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--bg-color);
-            /* Subtle transition for the background glow */
-            transition: background 1.5s ease;
+            background-color: #0d1117; 
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
-            touch-action: manipulation;
-        }
-
-        /* Digital Clock Top Right */
-        .clock {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            font-size: 14px;
-            font-weight: 300;
-            opacity: 0.6;
-            letter-spacing: 1px;
+            touch-action: manipulation; /* Prevents double-tap zoom delay */
         }
 
         .container {
             width: 300px;
             text-align: center;
-            z-index: 2;
         }
 
-        /* --- THE GAUGE --- */
         .gauge-box {
             position: relative;
             width: 240px;
@@ -51,23 +30,21 @@
 
         .gauge-svg {
             width: 100%;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
         }
 
         .gauge-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.05); 
-            stroke-width: 5;
+            stroke: #33363b; 
+            stroke-width: 6;
         }
 
         .gauge-fill {
             fill: none;
             stroke: #ffffff; 
-            stroke-width: 5;
+            stroke-width: 6;
             stroke-dasharray: 157; 
             stroke-dashoffset: 157;
-            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
-            stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .center-content {
@@ -87,28 +64,26 @@
         }
 
         .score-num {
-            font-size: 62px;
-            font-weight: 200;
+            font-size: 58px;
+            font-weight: 300;
             margin: 0;
-            letter-spacing: -2px;
+            letter-spacing: -1px;
         }
 
         .status-label {
-            font-size: 12px;
-            letter-spacing: 2px;
+            font-size: 14px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             opacity: 0;
-            margin-top: 12px;
-            transition: opacity 0.8s;
-            font-weight: 500;
+            margin-top: 10px;
+            transition: opacity 0.5s;
         }
 
-        /* --- INPUTS --- */
         .inputs {
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            padding: 0 30px;
+            gap: 15px;
+            padding: 0 40px;
         }
 
         .input-row {
@@ -118,74 +93,45 @@
         }
 
         label {
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            color: #8b949e;
         }
 
         input {
             background: transparent;
             border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid #30363d;
             color: white;
             width: 60px;
             text-align: right;
-            font-size: 16px; 
+            font-size: 16px; /* 16px prevents iOS from zooming in on focus */
             padding: 4px 0;
             outline: none;
+            border-radius: 0;
         }
 
-        /* Stepper Styling for Sleep */
-        .stepper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .step-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .sleep-val {
-            font-size: 15px;
-            width: 40px;
-            text-align: center;
-        }
-
-        button.update-btn {
-            margin-top: 15px;
+        button {
+            margin-top: 10px;
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.5);
+            border: 1px solid #30363d;
+            color: #8b949e;
             padding: 10px;
             border-radius: 8px;
-            font-size: 10px;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
             transition: 0.3s;
+            -webkit-appearance: none; /* Fixes iOS button styling */
         }
 
-        button.update-btn:active {
+        button:active {
             background: rgba(255,255,255,0.1);
-            color: white;
         }
     </style>
 </head>
 <body>
-
-<div class="clock" id="clock">00:00</div>
 
 <div class="container">
     <div class="gauge-box">
@@ -209,76 +155,41 @@
             <label>Steps</label>
             <input type="number" id="steps" placeholder="0">
         </div>
-        <div class="input-row">
-            <label>Sleep (hrs)</label>
-            <div class="stepper">
-                <div class="step-btn" onclick="stepSleep(-0.5)">−</div>
-                <span class="sleep-val" id="sleepDisplay">0</span>
-                <div class="step-btn" onclick="stepSleep(0.5)">+</div>
-            </div>
-        </div>
-        <button class="update-btn" onclick="update()">Update Lifestyle</button>
+        <button onclick="update()">Update Score</button>
     </div>
 </div>
 
 <script>
-let sleepHours = 0;
-
-function updateClock() {
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    document.getElementById('clock').innerText = time;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-function stepSleep(val) {
-    sleepHours = Math.max(0, Math.min(12, sleepHours + val));
-    document.getElementById('sleepDisplay').innerText = sleepHours;
-    update(); // Auto-update on sleep change
-}
-
+// Load saved data on startup
 window.onload = function() {
-    const savedMl = localStorage.getItem('h_ml');
-    const savedSteps = localStorage.getItem('h_steps');
-    const savedSleep = localStorage.getItem('h_sleep');
-    if (savedMl) document.getElementById('ml').value = savedMl;
-    if (savedSteps) document.getElementById('steps').value = savedSteps;
-    if (savedSleep) {
-        sleepHours = parseFloat(savedSleep);
-        document.getElementById('sleepDisplay').innerText = sleepHours;
+    const savedMl = localStorage.getItem('humanity_ml');
+    const savedSteps = localStorage.getItem('humanity_steps');
+    if (savedMl || savedSteps) {
+        document.getElementById('ml').value = savedMl;
+        document.getElementById('steps').value = savedSteps;
+        update();
     }
-    update();
 }
 
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
 
-    localStorage.setItem('h_ml', ml);
-    localStorage.setItem('h_steps', steps);
-    localStorage.setItem('h_sleep', sleepHours);
+    // Save to phone memory
+    localStorage.setItem('humanity_ml', ml);
+    localStorage.setItem('humanity_steps', steps);
 
-    // LOGIC: Hydration (Max 45) | Steps (Max 45) | Sleep (Max 10)
-    let s_ml = Math.min((ml / 2000) * 45, 45);
-    let s_steps = Math.min((steps / 10000) * 45, 45);
-    let s_sleep = Math.min((sleepHours / 8) * 10, 10); // 8 hours for full 10 points
+    let s1 = Math.min((ml / 2000) * 100, 100);
+    let s2 = Math.min((steps / 10000) * 100, 100);
     
-    let total = Math.round(s_ml + s_steps + s_sleep);
+    let total = Math.round((s1 * 0.5) + (s2 * 0.5));
 
-    // Update UI
     document.getElementById('score').innerText = total;
     const offset = 157 - (total / 100) * 157;
     document.getElementById('path').style.strokeDashoffset = offset;
 
-    // Visibility
     document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
     document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
-
-    // Dynamic Background Glow
-    // Fades from deep black-navy (0) to a more vibrant teal (100)
-    const opacity = total / 100;
-    document.body.style.background = `radial-gradient(at 50% 10%, hsla(170, 50%, ${10 + (opacity * 15)}%, ${opacity}), #080a0f 80%)`;
 }
 </script>
 </body>
