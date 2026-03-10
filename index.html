@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Humanity</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #080a0f; /* Base Dark */
-            --aurora: hsla(167, 40%, 15%, 1);
+            /* CORRECTED DARKEST START (Score 0) */
+            --bg-color: #030406; 
+            /* Subtle Aurora Teal Glow */
+            --aurora-vibrant: hsla(170, 70%, 12%, 1); 
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             background-color: var(--bg-color);
-            /* Subtle transition for the background glow */
-            transition: background 1.5s ease;
+            transition: background 1.5s ease-out; /* Slow, smooth shift */
             color: white;
             display: flex;
             justify-content: center;
@@ -25,15 +27,26 @@
             touch-action: manipulation;
         }
 
-        /* Digital Clock Top Right */
-        .clock {
+        /* --- THE EQUIPMENT-STYLE CLOCK DISPLAY --- */
+        .clock-equipment-bezel {
             position: absolute;
             top: 20px;
-            right: 25px;
-            font-size: 14px;
-            font-weight: 300;
-            opacity: 0.6;
-            letter-spacing: 1px;
+            right: 20px;
+            background-color: #000; /* Flat black case */
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid #222; /* Bezel outline */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .clock-digits {
+            font-family: 'VT323', monospace; /* Blocky digital font */
+            font-size: 26px; /* Sized like image 2 */
+            color: #ffffff; /* Stark white digits */
+            letter-spacing: 2px;
+            line-height: 1;
+            /* Subtly glowing LED effect */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
         }
 
         .container {
@@ -51,7 +64,6 @@
 
         .gauge-svg {
             width: 100%;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
         }
 
         .gauge-bg {
@@ -136,7 +148,7 @@
             outline: none;
         }
 
-        /* Stepper Styling for Sleep */
+        /* Sleep Stepper Styling */
         .stepper {
             display: flex;
             align-items: center;
@@ -163,12 +175,19 @@
             text-align: center;
         }
 
-        button.update-btn {
+        /* Bottom Controls Row */
+        .controls-row {
+            display: flex;
+            gap: 10px;
             margin-top: 15px;
+            justify-content: center;
+        }
+
+        button.update-btn {
             background: transparent;
             border: 1px solid rgba(255,255,255,0.1);
             color: rgba(255,255,255,0.5);
-            padding: 10px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-size: 10px;
             text-transform: uppercase;
@@ -177,7 +196,21 @@
             transition: 0.3s;
         }
 
-        button.update-btn:active {
+        button.reset-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button.update-btn:active, button.reset-btn:active {
             background: rgba(255,255,255,0.1);
             color: white;
         }
@@ -185,7 +218,9 @@
 </head>
 <body>
 
-<div class="clock" id="clock">00:00</div>
+<div class="clock-equipment-bezel">
+    <div class="clock-digits" id="clock">00:00</div>
+</div>
 
 <div class="container">
     <div class="gauge-box">
@@ -217,7 +252,12 @@
                 <div class="step-btn" onclick="stepSleep(0.5)">+</div>
             </div>
         </div>
-        <button class="update-btn" onclick="update()">Update Lifestyle</button>
+        <div class="controls-row">
+            <button class="reset-btn" onclick="resetDay()" title="Reset for new day">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            </button>
+            <button class="update-btn" onclick="update()">Update Lifestyle</button>
+        </div>
     </div>
 </div>
 
@@ -235,9 +275,10 @@ updateClock();
 function stepSleep(val) {
     sleepHours = Math.max(0, Math.min(12, sleepHours + val));
     document.getElementById('sleepDisplay').innerText = sleepHours;
-    update(); // Auto-update on sleep change
+    update(); // Auto-update
 }
 
+// Persist data on load
 window.onload = function() {
     const savedMl = localStorage.getItem('h_ml');
     const savedSteps = localStorage.getItem('h_steps');
@@ -251,6 +292,21 @@ window.onload = function() {
     update();
 }
 
+function resetDay() {
+    // Clear display
+    document.getElementById('ml').value = "";
+    document.getElementById('steps').value = "";
+    sleepHours = 0;
+    document.getElementById('sleepDisplay').innerText = sleepHours;
+    
+    // Clear storage
+    localStorage.removeItem('h_ml');
+    localStorage.removeItem('h_steps');
+    localStorage.removeItem('h_sleep');
+    
+    update(); // Reset score display
+}
+
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
@@ -262,23 +318,26 @@ function update() {
     // LOGIC: Hydration (Max 45) | Steps (Max 45) | Sleep (Max 10)
     let s_ml = Math.min((ml / 2000) * 45, 45);
     let s_steps = Math.min((steps / 10000) * 45, 45);
-    let s_sleep = Math.min((sleepHours / 8) * 10, 10); // 8 hours for full 10 points
+    let s_sleep = Math.min((sleepHours / 8) * 10, 10); // 8 hours for perfect 10 pts
     
     let total = Math.round(s_ml + s_steps + s_sleep);
 
-    // Update UI
     document.getElementById('score').innerText = total;
+    
+    // Gauge Animation
     const offset = 157 - (total / 100) * 157;
     document.getElementById('path').style.strokeDashoffset = offset;
 
-    // Visibility
+    // Visibility of Status/Crown
     document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
     document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
 
-    // Dynamic Background Glow
-    // Fades from deep black-navy (0) to a more vibrant teal (100)
-    const opacity = total / 100;
-    document.body.style.background = `radial-gradient(at 50% 10%, hsla(170, 50%, ${10 + (opacity * 15)}%, ${opacity}), #080a0f 80%)`;
+    // --- SLIGHT DYNAMIC BACKGROUND ---
+    // Start dark black-navy (#030406), get subtly teal as score rises.
+    const glowAmount = (total / 100); // 0.0 to 1.0
+    const minimalGradientRange = 10 + (glowAmount * 15); // Stays between 10% and 25% brightness
+
+    document.body.style.background = `radial-gradient(at 50% 10%, hsla(170, 70%, ${minimalGradientRange}%, ${glowAmount * 0.7}), #030406 80%)`;
 }
 </script>
 </body>
