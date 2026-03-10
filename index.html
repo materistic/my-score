@@ -6,17 +6,10 @@
     <title>Humanity</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        :root {
-            /* CORRECTED DARKEST START (Score 0) */
-            --bg-color: #030406; 
-            /* Subtle Aurora Teal Glow */
-            --aurora-vibrant: hsla(170, 70%, 12%, 1); 
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: var(--bg-color);
-            transition: background 1.5s ease-out; /* Slow, smooth shift */
+            background-color: #000000; /* Pure Black Start */
+            transition: background 1.5s ease-in-out;
             color: white;
             display: flex;
             justify-content: center;
@@ -27,26 +20,24 @@
             touch-action: manipulation;
         }
 
-        /* --- THE EQUIPMENT-STYLE CLOCK DISPLAY --- */
+        /* Hardware Style Clock */
         .clock-equipment-bezel {
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: #000; /* Flat black case */
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 2px solid #222; /* Bezel outline */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background-color: #050505; 
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 1px solid #1a1a1a;
+            box-shadow: 0 4px 15px rgba(0,0,0,1);
         }
 
         .clock-digits {
-            font-family: 'VT323', monospace; /* Blocky digital font */
-            font-size: 26px; /* Sized like image 2 */
-            color: #ffffff; /* Stark white digits */
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            color: #ffffff;
             letter-spacing: 2px;
-            line-height: 1;
-            /* Subtly glowing LED effect */
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
 
         .container {
@@ -55,7 +46,7 @@
             z-index: 2;
         }
 
-        /* --- THE GAUGE --- */
+        /* Gauge Area */
         .gauge-box {
             position: relative;
             width: 240px;
@@ -69,13 +60,13 @@
         .gauge-bg {
             fill: none;
             stroke: rgba(255, 255, 255, 0.05); 
-            stroke-width: 5;
+            stroke-width: 4;
         }
 
         .gauge-fill {
             fill: none;
             stroke: #ffffff; 
-            stroke-width: 5;
+            stroke-width: 4;
             stroke-dasharray: 157; 
             stroke-dashoffset: 157;
             transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
@@ -95,31 +86,29 @@
             height: 18px;
             opacity: 0;
             transition: opacity 0.5s;
-            margin-bottom: -5px;
         }
 
         .score-num {
-            font-size: 62px;
+            font-size: 64px;
             font-weight: 200;
             margin: 0;
             letter-spacing: -2px;
         }
 
         .status-label {
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 2px;
             text-transform: uppercase;
             opacity: 0;
-            margin-top: 12px;
+            margin-top: 15px;
             transition: opacity 0.8s;
-            font-weight: 500;
         }
 
-        /* --- INPUTS --- */
+        /* Inputs Area */
         .inputs {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
             padding: 0 30px;
         }
 
@@ -132,8 +121,8 @@
         label {
             font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.3);
         }
 
         input {
@@ -148,71 +137,58 @@
             outline: none;
         }
 
-        /* Sleep Stepper Styling */
         .stepper {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .step-btn {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.1);
             color: white;
-            width: 24px;
-            height: 24px;
-            border-radius: 5px;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
             cursor: pointer;
         }
 
         .sleep-val {
             font-size: 15px;
-            width: 40px;
-            text-align: center;
+            width: 30px;
         }
 
-        /* Bottom Controls Row */
         .controls-row {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 20px;
             justify-content: center;
         }
 
         button.update-btn {
-            background: transparent;
+            background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.4);
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
             cursor: pointer;
-            transition: 0.3s;
         }
 
         button.reset-btn {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.3);
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.2);
+            width: 38px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button.update-btn:active, button.reset-btn:active {
-            background: rgba(255,255,255,0.1);
-            color: white;
         }
     </style>
 </head>
@@ -253,8 +229,8 @@
             </div>
         </div>
         <div class="controls-row">
-            <button class="reset-btn" onclick="resetDay()" title="Reset for new day">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            <button class="reset-btn" onclick="resetDay()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
             </button>
             <button class="update-btn" onclick="update()">Update Lifestyle</button>
         </div>
@@ -275,69 +251,55 @@ updateClock();
 function stepSleep(val) {
     sleepHours = Math.max(0, Math.min(12, sleepHours + val));
     document.getElementById('sleepDisplay').innerText = sleepHours;
-    update(); // Auto-update
+    update();
 }
 
-// Persist data on load
 window.onload = function() {
-    const savedMl = localStorage.getItem('h_ml');
-    const savedSteps = localStorage.getItem('h_steps');
-    const savedSleep = localStorage.getItem('h_sleep');
-    if (savedMl) document.getElementById('ml').value = savedMl;
-    if (savedSteps) document.getElementById('steps').value = savedSteps;
-    if (savedSleep) {
-        sleepHours = parseFloat(savedSleep);
+    if (localStorage.getItem('h_ml')) document.getElementById('ml').value = localStorage.getItem('h_ml');
+    if (localStorage.getItem('h_steps')) document.getElementById('steps').value = localStorage.getItem('h_steps');
+    if (localStorage.getItem('h_sleep')) {
+        sleepHours = parseFloat(localStorage.getItem('h_sleep'));
         document.getElementById('sleepDisplay').innerText = sleepHours;
     }
     update();
 }
 
 function resetDay() {
-    // Clear display
     document.getElementById('ml').value = "";
     document.getElementById('steps').value = "";
     sleepHours = 0;
-    document.getElementById('sleepDisplay').innerText = sleepHours;
-    
-    // Clear storage
-    localStorage.removeItem('h_ml');
-    localStorage.removeItem('h_steps');
-    localStorage.removeItem('h_sleep');
-    
-    update(); // Reset score display
+    document.getElementById('sleepDisplay').innerText = 0;
+    localStorage.clear();
+    update();
 }
 
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
-
     localStorage.setItem('h_ml', ml);
     localStorage.setItem('h_steps', steps);
     localStorage.setItem('h_sleep', sleepHours);
 
-    // LOGIC: Hydration (Max 45) | Steps (Max 45) | Sleep (Max 10)
     let s_ml = Math.min((ml / 2000) * 45, 45);
     let s_steps = Math.min((steps / 10000) * 45, 45);
-    let s_sleep = Math.min((sleepHours / 8) * 10, 10); // 8 hours for perfect 10 pts
-    
+    let s_sleep = Math.min((sleepHours / 8) * 10, 10);
     let total = Math.round(s_ml + s_steps + s_sleep);
 
     document.getElementById('score').innerText = total;
-    
-    // Gauge Animation
-    const offset = 157 - (total / 100) * 157;
-    document.getElementById('path').style.strokeDashoffset = offset;
-
-    // Visibility of Status/Crown
+    document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
     document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
 
-    // --- SLIGHT DYNAMIC BACKGROUND ---
-    // Start dark black-navy (#030406), get subtly teal as score rises.
-    const glowAmount = (total / 100); // 0.0 to 1.0
-    const minimalGradientRange = 10 + (glowAmount * 15); // Stays between 10% and 25% brightness
-
-    document.body.style.background = `radial-gradient(at 50% 10%, hsla(170, 70%, ${minimalGradientRange}%, ${glowAmount * 0.7}), #030406 80%)`;
+    // --- REFINED BACKGROUND LOGIC ---
+    // If score is low (<30), stay pure black.
+    // If high, add a very subtle, deep teal gradient at the top only.
+    if (total < 10) {
+        document.body.style.background = "#000000";
+    } else {
+        const glowIntensity = (total / 100) * 0.4; // Cap at 40% strength
+        const brightness = 5 + (glowIntensity * 10); // Subtle 5-15% brightness
+        document.body.style.background = `radial-gradient(at 50% 0%, hsla(170, 80%, ${brightness}%, ${glowIntensity}), #000000 70%)`;
+    }
 }
 </script>
 </body>
