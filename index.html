@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Humanity Score</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Humanity</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -14,6 +14,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            touch-action: manipulation; /* Prevents double-tap zoom delay */
         }
 
         .container {
@@ -21,7 +22,6 @@
             text-align: center;
         }
 
-        /* --- THE DISPLAY --- */
         .gauge-box {
             position: relative;
             width: 240px;
@@ -30,7 +30,6 @@
 
         .gauge-svg {
             width: 100%;
-            /* Removed the scaleX(-1) so it starts from Left */
         }
 
         .gauge-bg {
@@ -80,7 +79,6 @@
             transition: opacity 0.5s;
         }
 
-        /* --- SUBTLE INPUTS --- */
         .inputs {
             display: flex;
             flex-direction: column;
@@ -108,13 +106,10 @@
             color: white;
             width: 60px;
             text-align: right;
-            font-size: 14px;
+            font-size: 16px; /* 16px prevents iOS from zooming in on focus */
             padding: 4px 0;
             outline: none;
-        }
-
-        input:focus {
-            border-bottom-color: #58a6ff;
+            border-radius: 0;
         }
 
         button {
@@ -122,17 +117,17 @@
             background: transparent;
             border: 1px solid #30363d;
             color: #8b949e;
-            padding: 8px;
-            border-radius: 6px;
+            padding: 10px;
+            border-radius: 8px;
             font-size: 11px;
             text-transform: uppercase;
             cursor: pointer;
             transition: 0.3s;
+            -webkit-appearance: none; /* Fixes iOS button styling */
         }
 
-        button:hover {
-            color: white;
-            border-color: #8b949e;
+        button:active {
+            background: rgba(255,255,255,0.1);
         }
     </style>
 </head>
@@ -165,20 +160,31 @@
 </div>
 
 <script>
+// Load saved data on startup
+window.onload = function() {
+    const savedMl = localStorage.getItem('humanity_ml');
+    const savedSteps = localStorage.getItem('humanity_steps');
+    if (savedMl || savedSteps) {
+        document.getElementById('ml').value = savedMl;
+        document.getElementById('steps').value = savedSteps;
+        update();
+    }
+}
+
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
 
-    // Logic: 2000ml is 100%, 10000 steps is 100%
+    // Save to phone memory
+    localStorage.setItem('humanity_ml', ml);
+    localStorage.setItem('humanity_steps', steps);
+
     let s1 = Math.min((ml / 2000) * 100, 100);
     let s2 = Math.min((steps / 10000) * 100, 100);
     
     let total = Math.round((s1 * 0.5) + (s2 * 0.5));
 
     document.getElementById('score').innerText = total;
-    
-    // Gauge Path (157 is the length of the arc)
-    // Offset logic: 157 is empty, 0 is full.
     const offset = 157 - (total / 100) * 157;
     document.getElementById('path').style.strokeDashoffset = offset;
 
@@ -186,6 +192,5 @@ function update() {
     document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
 }
 </script>
-
 </body>
 </html>
