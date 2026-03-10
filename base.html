@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Humanity Score</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #0d1117; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 300px;
+            text-align: center;
+        }
+
+        /* --- THE DISPLAY --- */
+        .gauge-box {
+            position: relative;
+            width: 240px;
+            margin: 0 auto 30px auto;
+        }
+
+        .gauge-svg {
+            width: 100%;
+            /* Removed the scaleX(-1) so it starts from Left */
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: #33363b; 
+            stroke-width: 6;
+        }
+
+        .gauge-fill {
+            fill: none;
+            stroke: #ffffff; 
+            stroke-width: 6;
+            stroke-dasharray: 157; 
+            stroke-dashoffset: 157;
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .center-content {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -40%);
+        }
+
+        .crown {
+            font-size: 14px;
+            display: block;
+            height: 18px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            margin-bottom: -5px;
+        }
+
+        .score-num {
+            font-size: 58px;
+            font-weight: 300;
+            margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .status-label {
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0;
+            margin-top: 10px;
+            transition: opacity 0.5s;
+        }
+
+        /* --- SUBTLE INPUTS --- */
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 0 40px;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b949e;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #30363d;
+            color: white;
+            width: 60px;
+            text-align: right;
+            font-size: 14px;
+            padding: 4px 0;
+            outline: none;
+        }
+
+        input:focus {
+            border-bottom-color: #58a6ff;
+        }
+
+        button {
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid #30363d;
+            color: #8b949e;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            color: white;
+            border-color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="gauge-box">
+        <svg class="gauge-svg" viewBox="0 0 120 70">
+            <path class="gauge-bg" d="M10,60 A50,50 0 0,1 110,60" />
+            <path id="path" class="gauge-fill" d="M10,60 A50,50 0 0,1 110,60" />
+        </svg>
+        <div class="center-content">
+            <span id="crown" class="crown">👑</span>
+            <h1 id="score" class="score-num">0</h1>
+        </div>
+        <div id="status" class="status-label">Optimal</div>
+    </div>
+
+    <div class="inputs">
+        <div class="input-row">
+            <label>Hydration (ml)</label>
+            <input type="number" id="ml" placeholder="0">
+        </div>
+        <div class="input-row">
+            <label>Steps</label>
+            <input type="number" id="steps" placeholder="0">
+        </div>
+        <button onclick="update()">Update Score</button>
+    </div>
+</div>
+
+<script>
+function update() {
+    const ml = document.getElementById('ml').value || 0;
+    const steps = document.getElementById('steps').value || 0;
+
+    // Logic: 2000ml is 100%, 10000 steps is 100%
+    let s1 = Math.min((ml / 2000) * 100, 100);
+    let s2 = Math.min((steps / 10000) * 100, 100);
+    
+    let total = Math.round((s1 * 0.5) + (s2 * 0.5));
+
+    document.getElementById('score').innerText = total;
+    
+    // Gauge Path (157 is the length of the arc)
+    // Offset logic: 157 is empty, 0 is full.
+    const offset = 157 - (total / 100) * 157;
+    document.getElementById('path').style.strokeDashoffset = offset;
+
+    document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
+    document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
+}
+</script>
+
+</body>
+</html>
