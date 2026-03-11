@@ -28,7 +28,6 @@
             padding: 8px 18px;
             border-radius: 4px;
             border: 1px solid #1a1a1a;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
             z-index: 1000;
         }
 
@@ -36,8 +35,7 @@
             font-family: 'VT323', monospace;
             font-size: 32px;
             color: #ffffff;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+            letter-spacing: 3px;
         }
 
         .container {
@@ -50,7 +48,7 @@
         .gauge-box {
             position: relative;
             width: 240px;
-            margin: 0 auto 20px auto;
+            margin: 0 auto 30px auto;
         }
 
         .gauge-svg { width: 100%; }
@@ -58,8 +56,7 @@
         .gauge-fill {
             fill: none; stroke: #ffffff; stroke-width: 4;
             stroke-dasharray: 157; stroke-dashoffset: 157;
-            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
-            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease; stroke-linecap: round;
         }
 
         .center-content {
@@ -70,16 +67,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
         }
 
-        /* Tiny Sleep Sub-score */
-        .sleep-subscore {
+        /* Tiny Sleep Score to the Left */
+        .sub-score {
             font-size: 12px;
             opacity: 0.3;
             margin-right: 15px;
+            transform: translateY(10px);
             font-weight: 300;
-            letter-spacing: 1px;
         }
 
         .score-num {
@@ -89,32 +85,24 @@
             letter-spacing: -2px;
         }
 
-        .crown { font-size: 14px; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); opacity: 0; transition: 0.5s; }
+        .status-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; margin-top: 15px; transition: 0.8s; }
 
-        .inputs { display: flex; flex-direction: column; gap: 14px; padding: 0 20px; }
+        .inputs { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; }
         .input-row { display: flex; justify-content: space-between; align-items: center; }
-        label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+        label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
         
-        input[type="number"], input[type="range"] {
-            background: transparent; border: none; color: white; outline: none;
-        }
-        input[type="number"] { border-bottom: 1px solid rgba(255,255,255,0.1); width: 50px; text-align: right; }
+        input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; width: 60px; text-align: right; font-size: 16px; outline: none; }
 
-        /* Slider Styling */
-        .slider { width: 100px; height: 4px; border-radius: 2px; -webkit-appearance: none; background: rgba(255,255,255,0.1); }
-        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; }
+        input[type="range"] { width: 100px; accent-color: #fff; }
 
-        .toggle-btn {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.3); padding: 6px 10px; border-radius: 6px; font-size: 12px;
-        }
-        .toggle-btn.active { border-color: #fff; color: #fff; background: rgba(255,255,255,0.1); }
+        .toggle-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .toggle-btn.active { border-color: #ffffff; color: #ffffff; background: rgba(255,255,255,0.1); }
 
-        .stepper { display: flex; align-items: center; gap: 8px; }
+        .stepper { display: flex; align-items: center; gap: 10px; }
         .step-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
-        
-        .controls-row { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
-        button.update-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 8px 16px; border-radius: 6px; font-size: 9px; text-transform: uppercase; }
+
+        .controls-row { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
+        button.update-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 10px 20px; border-radius: 6px; font-size: 10px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -128,10 +116,10 @@
             <path id="path" class="gauge-fill" d="M10,60 A50,50 0 0,1 110,60" />
         </svg>
         <div class="center-content">
-            <span id="sleepSub" class="sleep-subscore">0%</span>
-            <span id="crown" class="crown">👑</span>
+            <div class="sub-score" id="sleepScore">S: 0</div>
             <h1 id="score" class="score-num">0</h1>
         </div>
+        <div id="status" class="status-label">Optimal</div>
     </div>
 
     <div class="inputs">
@@ -141,64 +129,48 @@
             <label>Length (hrs)</label>
             <div class="stepper">
                 <div class="step-btn" onclick="stepSleep(-0.5)">−</div>
-                <span id="sleepDisplay" style="font-size:14px; width:25px;">0</span>
+                <span id="sleepDisplay" style="width:30px; font-size:14px;">0</span>
                 <div class="step-btn" onclick="stepSleep(0.5)">+</div>
             </div>
         </div>
         <div class="input-row">
-            <label>Start Time</label>
-            <div class="stepper">
-                <input type="range" id="bedtime" class="slider" min="21" max="26" step="0.5" value="23" oninput="updateBedtimeDisplay()">
-                <span id="bedtimeLabel" style="font-size:11px; width:45px; opacity:0.6;">11:00P</span>
-            </div>
+            <label>Bedtime</label>
+            <span id="bedtimeLabel" style="font-size:11px; opacity:0.6;">11:00 PM</span>
+            <input type="range" id="bedtime" min="20" max="26" value="23" step="0.5" oninput="updateBedtimeLabel()">
         </div>
         <div class="input-row">
             <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ Cold</button>
             <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">📵 No Scroll</button>
         </div>
         <div class="controls-row">
-            <button class="update-btn" style="width:40px;" onclick="resetDay()">⟳</button>
-            <button class="update-btn" onclick="update()">Update Lifestyle</button>
+            <button class="update-btn" onclick="update()">Update</button>
+            <button class="update-btn" style="width:40px; padding:10px 0;" onclick="resetDay()">↺</button>
         </div>
     </div>
 </div>
 
 <script>
-let sleepHours = 0;
-let coldShower = false;
-let noScroll = false;
+let sleepHrs = 0; let coldS = false; let noS = false;
 
 function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    document.getElementById('clock').innerText = t;
 }
 setInterval(updateClock, 1000); updateClock();
 
-function stepSleep(val) { sleepHours = Math.max(0, Math.min(12, sleepHours + val)); document.getElementById('sleepDisplay').innerText = sleepHours; update(); }
-
-function updateBedtimeDisplay() {
+function updateBedtimeLabel() {
     let val = parseFloat(document.getElementById('bedtime').value);
-    let h = val >= 24 ? val - 24 : val;
-    let m = (val % 1 === 0.5) ? "30" : "00";
-    let suffix = val >= 24 ? ":"+m+"A" : ":"+m+"P";
-    document.getElementById('bedtimeLabel').innerText = Math.floor(h) + suffix;
+    let h = val > 24 ? val - 24 : val;
+    let suffix = val >= 24 ? "AM" : "PM";
+    document.getElementById('bedtimeLabel').innerText = `${Math.floor(h)}:${h%1==0.5?'30':'00'} ${suffix}`;
     update();
 }
 
-function toggle(type) {
-    if(type === 'cold') { coldShower = !coldShower; document.getElementById('coldBtn').classList.toggle('active', coldShower); }
-    else { noScroll = !noScroll; document.getElementById('scrollBtn').classList.toggle('active', noScroll); }
-    update();
-}
-
-window.onload = function() {
-    if (localStorage.getItem('h_ml')) document.getElementById('ml').value = localStorage.getItem('h_ml');
-    if (localStorage.getItem('h_steps')) document.getElementById('steps').value = localStorage.getItem('h_steps');
-    if (localStorage.getItem('h_sleep')) { sleepHours = parseFloat(localStorage.getItem('h_sleep')); document.getElementById('sleepDisplay').innerText = sleepHours; }
-    if (localStorage.getItem('h_bed')) { document.getElementById('bedtime').value = localStorage.getItem('h_bed'); updateBedtimeDisplay(); }
-    coldShower = localStorage.getItem('h_cold') === 'true'; noScroll = localStorage.getItem('h_scroll') === 'true';
-    document.getElementById('coldBtn').classList.toggle('active', coldShower); document.getElementById('scrollBtn').classList.toggle('active', noScroll);
-    update();
+function stepSleep(v) { sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); document.getElementById('sleepDisplay').innerText = sleepHrs; update(); }
+function toggle(t) { 
+    if(t==='cold') { coldS = !coldS; document.getElementById('coldBtn').classList.toggle('active', coldS); } 
+    else { noS = !noS; document.getElementById('scrollBtn').classList.toggle('active', noS); }
+    update(); 
 }
 
 function resetDay() { localStorage.clear(); location.reload(); }
@@ -206,33 +178,38 @@ function resetDay() { localStorage.clear(); location.reload(); }
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
-    const bed = parseFloat(document.getElementById('bedtime').value);
-    
-    localStorage.setItem('h_ml', ml); localStorage.setItem('h_steps', steps); localStorage.setItem('h_sleep', sleepHours);
-    localStorage.setItem('h_bed', bed); localStorage.setItem('h_cold', coldShower); localStorage.setItem('h_scroll', noScroll);
+    const bedtimeVal = parseFloat(document.getElementById('bedtime').value);
 
-    // LOGIC
-    let s_ml = Math.min((ml / 2000) * 35.5, 35.5);
-    let s_steps = Math.min((steps / 10000) * 35.5, 35.5);
+    // Calc Sleep Score (Internal Quality)
+    let s_len_q = Math.min((sleepHrs / 8) * 75, 75); // 75% of sleep score is length
+    let s_time_q = bedtimeVal <= 23 ? 25 : Math.max(0, 25 - (bedtimeVal - 23) * 12.5); // 25% is timing
+    let sleepTotal = Math.round(s_len_q + s_time_q);
+    document.getElementById('sleepScore').innerText = `S: ${sleepTotal}`;
+
+    // Main Weighting
+    let score_ml = Math.min((ml / 2000) * 35, 35);
+    let score_steps = Math.min((steps / 10000) * 35, 35);
+    let score_sleep_len = Math.min((sleepHrs / 8) * 20, 20);
+    let score_sleep_time = s_time_q / 25 * 6; // Timing gives max 6 points
     
-    // Sleep Logic (Total 25 points: 20 length, 5 timing)
-    let s_len = Math.min((sleepHours / 8) * 20, 20);
-    let s_time = 0;
-    if (bed <= 23) s_time = 5; // Before 11PM
-    else if (bed < 25) s_time = 5 - ((bed - 23) * 2.5); // Slopes down to 1AM
-    
-    let sleepTotal = s_len + s_time;
-    let sleepSubScore = Math.round((sleepTotal / 25) * 100);
-    
-    let total = Math.round(s_ml + s_steps + sleepTotal + (coldShower ? 2 : 0) + (noScroll ? 2 : 0));
+    let total = Math.round(score_ml + score_steps + score_sleep_len + score_sleep_time + (coldS?2:0) + (noS?2:0));
 
     document.getElementById('score').innerText = total;
-    document.getElementById('sleepSub').innerText = sleepSubScore + "%";
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
-    document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
+    document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
+    document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total/100)*6}%)`;
     
-    const brightness = 4 + (total / 100) * 6;
-    document.body.style.backgroundColor = `hsl(170, 40%, ${brightness}%)`;
+    localStorage.setItem('h_ml', ml); localStorage.setItem('h_steps', steps); localStorage.setItem('h_sleep', sleepHrs);
+    localStorage.setItem('h_bt', bedtimeVal);
+}
+
+window.onload = () => {
+    document.getElementById('ml').value = localStorage.getItem('h_ml') || "";
+    document.getElementById('steps').value = localStorage.getItem('h_steps') || "";
+    sleepHrs = parseFloat(localStorage.getItem('h_sleep')) || 0;
+    document.getElementById('sleepDisplay').innerText = sleepHrs;
+    document.getElementById('bedtime').value = localStorage.getItem('h_bt') || 23;
+    updateBedtimeLabel();
 }
 </script>
 </body>
