@@ -106,19 +106,18 @@
             justify-content: center;
             gap: 8px;
             margin-bottom: 25px;
-            padding: 0 30px;
+            padding: 0 40px;
         }
         
         .block {
             flex: 1;
-            height: 4px;
+            height: 3px;
             background: rgba(255,255,255,0.05);
             border-radius: 2px;
             position: relative;
             transition: background 0.3s ease;
         }
-
-        /* Subtle Active Highlight */
+        
         .block.active {
             background: rgba(255,255,255,0.15);
         }
@@ -134,7 +133,7 @@
 
         .block-label {
             position: absolute;
-            bottom: -14px;
+            bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 7px;
@@ -143,7 +142,7 @@
             letter-spacing: 0.2px;
             transition: color 0.3s ease;
         }
-
+        
         .block.active .block-label {
             color: rgba(255,255,255,0.6);
         }
@@ -246,7 +245,7 @@
 let sleepHrs = 0;
 let cold = false;
 let scroll = false;
-let blockPoints = [0, 0, 0, 0]; 
+let blockPoints = [0, 0, 0, 0];
 
 function stepSleep(v) { 
     sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); 
@@ -267,7 +266,7 @@ function update() {
     let now = new Date();
     let h_now = now.getHours();
     
-    // Scoring Logic (35 Hydration, 35 Steps, 21 Sleep Length, 5 Sleep Time, 4 Toggles = 100)
+    // Scoring Logic
     let s_ml = Math.min((ml / 2000) * 35, 35);
     let s_steps = Math.min((steps / 10000) * 35, 35);
     let s_len = Math.min((sleepHrs / 8) * 21, 21);
@@ -278,35 +277,28 @@ function update() {
     let s_scroll = scroll ? 2 : 0;
     
     let total = Math.round(s_ml + s_steps + s_len + s_time + s_cold + s_scroll);
-    
-    // ACTIVE POINTS logic for blocks (70 total max)
     let activePoints = s_ml + s_steps;
-    
-    // Determine active block and update highlighting
-    let currentBlockIndex = -1;
-    if (h_now >= 4 && h_now < 8) currentBlockIndex = 0;
-    else if (h_now >= 8 && h_now < 12) currentBlockIndex = 1;
-    else if (h_now >= 12 && h_now < 16) currentBlockIndex = 2;
-    else if (h_now >= 16 && h_now < 20) currentBlockIndex = 3;
 
-    // Remove active class from all, add to current
-    for(let i=1; i<=4; i++) document.getElementById(`block${i}`).classList.remove('active');
-    if(currentBlockIndex !== -1) {
-        document.getElementById(`block${currentBlockIndex+1}`).classList.add('active');
-        blockPoints[currentBlockIndex] = activePoints;
-    }
+    // Time-Block logic: 4-8, 8-12, 12-16, 16-20
+    let activeIndex = -1;
+    if (h_now >= 4 && h_now < 8) activeIndex = 0;
+    else if (h_now >= 8 && h_now < 12) activeIndex = 1;
+    else if (h_now >= 12 && h_now < 16) activeIndex = 2;
+    else if (h_now >= 16 && h_now < 20) activeIndex = 3;
 
-    // Update Block Progress Visuals
+    if (activeIndex !== -1) blockPoints[activeIndex] = activePoints;
+
     for(let i=0; i<4; i++) {
         let percent = Math.min((blockPoints[i] / 70) * 100, 100);
         document.getElementById(`b${i+1}`).style.width = percent + '%';
+        // Subtle highlight for active block
+        document.getElementById(`block${i+1}`).classList.toggle('active', i === activeIndex);
     }
     
-    // Clock/UI
+    // UI Logic
     let bt_h = Math.floor(bedTime % 24);
     let bt_m = (bedTime % 1) * 60;
     document.getElementById('timeVal').innerText = `${bt_h.toString().padStart(2,'0')}:${bt_m.toString().padStart(2,'0')}`;
-    
     document.getElementById('sleepScore').innerText = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
@@ -314,24 +306,23 @@ function update() {
     document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
-
     document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total / 100) * 6}%)`;
+    
     saveState();
 }
 
 function saveState() {
-    const state = {
+    localStorage.setItem('h_pro_state', JSON.stringify({
         ml: document.getElementById('ml').value,
         steps: document.getElementById('steps').value,
         sleepHrs, cold, scroll,
         bedTime: document.getElementById('sleepTime').value,
         blockPoints
-    };
-    localStorage.setItem('h_pro_state_v2', JSON.stringify(state));
+    }));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('h_pro_state_v2');
+    const saved = localStorage.getItem('h_pro_state');
     if (saved) {
         const s = JSON.parse(saved);
         document.getElementById('ml').value = s.ml;
@@ -349,8 +340,18 @@ function loadState() {
 function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+    // Update active block highlighting every minute
+    let h = now.getHours();
+    for(let i=0; i<4; i++) {
+        let active = false;
+        if(i===0) active = h >= 4 && h < 8;
+        if(i===1) active = h >= 8 && h < 12;
+        if(i===2) active = h >= 12 && h < 16;
+        if(i===3) active = h >= 16 && h < 20;
+        document.getElementById(`block${i+1}`).classList.toggle('active', active);
+    }
 }
-setInterval(updateClock, 1000); 
+setInterval(updateClock, 60000); 
 updateClock();
 window.onload = loadState;
 
