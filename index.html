@@ -8,8 +8,7 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            /* Uniform background color with a slow transition */
-            background-color: #030406; 
+            background-color: #05070a; 
             transition: background-color 2s ease;
             color: white;
             display: flex;
@@ -17,25 +16,26 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden;
             touch-action: manipulation;
         }
 
-        /* Hardware Style Clock - Larger Digits */
+        /* Fixed Clock: Stays visible even when keyboard shifts layout */
         .clock-equipment-bezel {
-            position: absolute;
-            top: 25px;
-            right: 25px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             background-color: #000000; 
             padding: 8px 18px;
             border-radius: 4px;
             border: 1px solid #1a1a1a;
             box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            z-index: 1000;
         }
 
         .clock-digits {
             font-family: 'VT323', monospace;
-            font-size: 32px; /* Increased size as requested */
+            font-size: 32px;
             color: #ffffff;
             letter-spacing: 3px;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
@@ -45,9 +45,9 @@
             width: 300px;
             text-align: center;
             z-index: 2;
+            padding-top: 60px; /* Room for fixed clock */
         }
 
-        /* Gauge Area */
         .gauge-box {
             position: relative;
             width: 240px;
@@ -105,12 +105,11 @@
             transition: opacity 0.8s;
         }
 
-        /* Inputs Area */
         .inputs {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding: 0 30px;
+            gap: 15px;
+            padding: 0 20px;
         }
 
         .input-row {
@@ -123,7 +122,7 @@
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.4);
         }
 
         input {
@@ -138,10 +137,31 @@
             outline: none;
         }
 
+        /* Toggle Button Styling */
+        .toggle-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn.active {
+            border-color: #ffffff;
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+        }
+
         .stepper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .step-btn {
@@ -165,7 +185,7 @@
         .controls-row {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
             justify-content: center;
         }
 
@@ -229,6 +249,15 @@
                 <div class="step-btn" onclick="stepSleep(0.5)">+</div>
             </div>
         </div>
+        <div class="input-row">
+            <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">
+                <span>❄️</span> Cold Shower
+            </button>
+            <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">
+                <span>📵</span> No Scroll
+            </button>
+        </div>
+
         <div class="controls-row">
             <button class="reset-btn" onclick="resetDay()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
@@ -240,6 +269,8 @@
 
 <script>
 let sleepHours = 0;
+let coldShower = false;
+let noScroll = false;
 
 function updateClock() {
     const now = new Date();
@@ -255,6 +286,17 @@ function stepSleep(val) {
     update();
 }
 
+function toggle(type) {
+    if(type === 'cold') {
+        coldShower = !coldShower;
+        document.getElementById('coldBtn').classList.toggle('active', coldShower);
+    } else {
+        noScroll = !noScroll;
+        document.getElementById('scrollBtn').classList.toggle('active', noScroll);
+    }
+    update();
+}
+
 window.onload = function() {
     if (localStorage.getItem('h_ml')) document.getElementById('ml').value = localStorage.getItem('h_ml');
     if (localStorage.getItem('h_steps')) document.getElementById('steps').value = localStorage.getItem('h_steps');
@@ -262,6 +304,10 @@ window.onload = function() {
         sleepHours = parseFloat(localStorage.getItem('h_sleep'));
         document.getElementById('sleepDisplay').innerText = sleepHours;
     }
+    coldShower = localStorage.getItem('h_cold') === 'true';
+    noScroll = localStorage.getItem('h_scroll') === 'true';
+    document.getElementById('coldBtn').classList.toggle('active', coldShower);
+    document.getElementById('scrollBtn').classList.toggle('active', noScroll);
     update();
 }
 
@@ -270,6 +316,10 @@ function resetDay() {
     document.getElementById('steps').value = "";
     sleepHours = 0;
     document.getElementById('sleepDisplay').innerText = 0;
+    coldShower = false;
+    noScroll = false;
+    document.getElementById('coldBtn').classList.remove('active');
+    document.getElementById('scrollBtn').classList.remove('active');
     localStorage.clear();
     update();
 }
@@ -277,25 +327,29 @@ function resetDay() {
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
+    
     localStorage.setItem('h_ml', ml);
     localStorage.setItem('h_steps', steps);
     localStorage.setItem('h_sleep', sleepHours);
+    localStorage.setItem('h_cold', coldShower);
+    localStorage.setItem('h_scroll', noScroll);
 
-    let s_ml = Math.min((ml / 2000) * 45, 45);
-    let s_steps = Math.min((steps / 10000) * 45, 45);
-    let s_sleep = Math.min((sleepHours / 8) * 10, 10);
-    let total = Math.round(s_ml + s_steps + s_sleep);
+    // WEIGHTING
+    let s_ml = Math.min((ml / 2000) * 38, 38);
+    let s_steps = Math.min((steps / 10000) * 38, 38);
+    let s_sleep = Math.min((sleepHours / 8) * 20, 20);
+    let s_cold = coldShower ? 2 : 0;
+    let s_scroll = noScroll ? 2 : 0;
+    
+    let total = Math.round(s_ml + s_steps + s_sleep + s_cold + s_scroll);
 
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     document.getElementById('crown').style.opacity = total > 70 ? "1" : "0";
     document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
 
-    // --- SOLID SUBTLE BACKGROUND LOGIC ---
-    // Calculates a brightness between 2% and 8% based on score.
-    // hsl(170, 40%, 2%) = Almost black-navy
-    // hsl(170, 40%, 8%) = Very dark Aurora Teal
-    const brightness = 2 + (total / 100) * 6;
+    // Brightness bumped from 2% start to 4% start
+    const brightness = 4 + (total / 100) * 6;
     document.body.style.backgroundColor = `hsl(170, 40%, ${brightness}%)`;
 }
 </script>
