@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Humanity</title>
+    <title>Humanity Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: #05070a; 
+            background-color: #030406; 
             transition: background-color 2s ease;
             color: white;
             display: flex;
@@ -24,7 +24,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: #000000; 
+            background-color: #000; 
             padding: 8px 18px;
             border-radius: 4px;
             border: 1px solid #1a1a1a;
@@ -34,29 +34,62 @@
         .clock-digits {
             font-family: 'VT323', monospace;
             font-size: 32px;
-            color: #ffffff;
+            color: #fff;
             letter-spacing: 3px;
         }
 
         .container {
-            width: 300px;
+            width: 320px;
             text-align: center;
-            z-index: 2;
             padding-top: 40px;
         }
 
         .gauge-box {
             position: relative;
-            width: 240px;
-            margin: 0 auto 30px auto;
+            width: 260px;
+            margin: 0 auto 20px auto;
         }
 
         .gauge-svg { width: 100%; }
+
         .gauge-bg { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 4; }
+        
+        /* The "Potential" Ghost Bar */
+        .gauge-potential {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+            stroke-dasharray: 157;
+            stroke-dashoffset: 157;
+            transition: stroke-dashoffset 1s ease;
+            stroke-linecap: round;
+        }
+
         .gauge-fill {
-            fill: none; stroke: #ffffff; stroke-width: 4;
-            stroke-dasharray: 157; stroke-dashoffset: 157;
-            transition: stroke-dashoffset 1s ease; stroke-linecap: round;
+            fill: none;
+            stroke: #ffffff; 
+            stroke-width: 4;
+            stroke-dasharray: 157; 
+            stroke-dashoffset: 157;
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+            stroke-linecap: round;
+        }
+
+        /* Sleep Score Badge - Left of Gauge */
+        .sleep-badge {
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
         }
 
         .center-content {
@@ -64,45 +97,42 @@
             top: 60%;
             left: 50%;
             transform: translate(-50%, -40%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* Tiny Sleep Score to the Left */
-        .sub-score {
-            font-size: 12px;
-            opacity: 0.3;
-            margin-right: 15px;
-            transform: translateY(10px);
-            font-weight: 300;
-        }
+        .score-num { font-size: 64px; font-weight: 200; margin: 0; letter-spacing: -2px; }
 
-        .score-num {
-            font-size: 64px;
-            font-weight: 200;
-            margin: 0;
-            letter-spacing: -2px;
-        }
-
-        .status-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: 0; margin-top: 15px; transition: 0.8s; }
-
-        .inputs { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; }
+        .inputs { display: flex; flex-direction: column; gap: 14px; padding: 0 20px; }
         .input-row { display: flex; justify-content: space-between; align-items: center; }
-        label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+        label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
         
-        input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; width: 60px; text-align: right; font-size: 16px; outline: none; }
+        input[type="number"], input[type="range"] {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+        }
 
-        input[type="range"] { width: 100px; accent-color: #fff; }
+        input[type="number"] { border-bottom: 1px solid rgba(255,255,255,0.1); width: 50px; text-align: right; }
+        
+        .time-label { font-size: 11px; color: #8b949e; width: 60px; text-align: right; }
 
-        .toggle-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-        .toggle-btn.active { border-color: #ffffff; color: #ffffff; background: rgba(255,255,255,0.1); }
+        .toggle-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
 
-        .stepper { display: flex; align-items: center; gap: 10px; }
+        .toggle-btn.active { border-color: #fff; color: #fff; }
+
+        .stepper { display: flex; align-items: center; gap: 8px; }
         .step-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
 
         .controls-row { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
-        button.update-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 10px 20px; border-radius: 6px; font-size: 10px; text-transform: uppercase; }
+        button.update-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 4px; font-size: 10px; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -111,106 +141,109 @@
 
 <div class="container">
     <div class="gauge-box">
+        <div class="sleep-badge" id="sleepScore">--</div>
         <svg class="gauge-svg" viewBox="0 0 120 70">
             <path class="gauge-bg" d="M10,60 A50,50 0 0,1 110,60" />
+            <path id="potentialPath" class="gauge-potential" d="M10,60 A50,50 0 0,1 110,60" />
             <path id="path" class="gauge-fill" d="M10,60 A50,50 0 0,1 110,60" />
         </svg>
         <div class="center-content">
-            <div class="sub-score" id="sleepScore">S: 0</div>
             <h1 id="score" class="score-num">0</h1>
         </div>
-        <div id="status" class="status-label">Optimal</div>
     </div>
 
     <div class="inputs">
-        <div class="input-row"><label>Hydration (ml)</label><input type="number" id="ml" placeholder="0"></div>
-        <div class="input-row"><label>Steps</label><input type="number" id="steps" placeholder="0"></div>
         <div class="input-row">
-            <label>Length (hrs)</label>
+            <label>Sleep Time</label>
+            <input type="range" id="sleepTime" min="21" max="26" step="0.5" value="23" oninput="update()">
+            <span class="time-label" id="timeVal">23:00</span>
+        </div>
+        <div class="input-row">
+            <label>Sleep Duration</label>
             <div class="stepper">
                 <div class="step-btn" onclick="stepSleep(-0.5)">−</div>
-                <span id="sleepDisplay" style="width:30px; font-size:14px;">0</span>
+                <span id="sleepDisplay" style="font-size:14px; width:30px;">0</span>
                 <div class="step-btn" onclick="stepSleep(0.5)">+</div>
             </div>
         </div>
         <div class="input-row">
-            <label>Bedtime</label>
-            <span id="bedtimeLabel" style="font-size:11px; opacity:0.6;">11:00 PM</span>
-            <input type="range" id="bedtime" min="20" max="26" value="23" step="0.5" oninput="updateBedtimeLabel()">
+            <label>Hydration (ml)</label>
+            <input type="number" id="ml" placeholder="0" oninput="update()">
         </div>
         <div class="input-row">
-            <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ Cold</button>
+            <label>Steps</label>
+            <input type="number" id="steps" placeholder="0" oninput="update()">
+        </div>
+        <div class="input-row" style="justify-content: space-around;">
+            <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ Shower</button>
             <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">📵 No Scroll</button>
         </div>
         <div class="controls-row">
-            <button class="update-btn" onclick="update()">Update</button>
-            <button class="update-btn" style="width:40px; padding:10px 0;" onclick="resetDay()">↺</button>
+            <button class="update-btn" onclick="resetDay()">Reset Day</button>
         </div>
     </div>
 </div>
 
 <script>
-let sleepHrs = 0; let coldS = false; let noS = false;
-
-function updateClock() {
-    const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-    document.getElementById('clock').innerText = t;
-}
-setInterval(updateClock, 1000); updateClock();
-
-function updateBedtimeLabel() {
-    let val = parseFloat(document.getElementById('bedtime').value);
-    let h = val > 24 ? val - 24 : val;
-    let suffix = val >= 24 ? "AM" : "PM";
-    document.getElementById('bedtimeLabel').innerText = `${Math.floor(h)}:${h%1==0.5?'30':'00'} ${suffix}`;
-    update();
-}
+let sleepHrs = 0;
+let cold = false;
+let scroll = false;
 
 function stepSleep(v) { sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); document.getElementById('sleepDisplay').innerText = sleepHrs; update(); }
-function toggle(t) { 
-    if(t==='cold') { coldS = !coldS; document.getElementById('coldBtn').classList.toggle('active', coldS); } 
-    else { noS = !noS; document.getElementById('scrollBtn').classList.toggle('active', noS); }
-    update(); 
-}
-
-function resetDay() { localStorage.clear(); location.reload(); }
+function toggle(t) { if(t==='cold') cold=!cold; else scroll=!scroll; update(); }
 
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
-    const bedtimeVal = parseFloat(document.getElementById('bedtime').value);
-
-    // Calc Sleep Score (Internal Quality)
-    let s_len_q = Math.min((sleepHrs / 8) * 75, 75); // 75% of sleep score is length
-    let s_time_q = bedtimeVal <= 23 ? 25 : Math.max(0, 25 - (bedtimeVal - 23) * 12.5); // 25% is timing
-    let sleepTotal = Math.round(s_len_q + s_time_q);
-    document.getElementById('sleepScore').innerText = `S: ${sleepTotal}`;
-
-    // Main Weighting
-    let score_ml = Math.min((ml / 2000) * 35, 35);
-    let score_steps = Math.min((steps / 10000) * 35, 35);
-    let score_sleep_len = Math.min((sleepHrs / 8) * 20, 20);
-    let score_sleep_time = s_time_q / 25 * 6; // Timing gives max 6 points
+    const bedTime = parseFloat(document.getElementById('sleepTime').value);
     
-    let total = Math.round(score_ml + score_steps + score_sleep_len + score_sleep_time + (coldS?2:0) + (noS?2:0));
-
+    // UI Update for Sleep Time
+    let h = Math.floor(bedTime % 24);
+    let m = (bedTime % 1) * 60;
+    document.getElementById('timeVal').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+    
+    // Scoring Logic
+    let s_ml = Math.min((ml / 2000) * 35, 35);
+    let s_steps = Math.min((steps / 10000) * 35, 35);
+    let s_len = Math.min((sleepHrs / 8) * 21, 21);
+    
+    // Sleep Time (Max 5): 21:00-23:00 = 5pts, 01:30+ = 0pts
+    let s_time = 0;
+    if (bedTime <= 23) s_time = 5;
+    else if (bedTime < 25.5) s_time = 5 * (1 - (bedTime - 23) / 2.5);
+    
+    let s_cold = cold ? 2 : 0;
+    let s_scroll = scroll ? 2 : 0;
+    
+    let total = Math.round(s_ml + s_steps + s_len + s_time + s_cold + s_scroll);
+    
+    // Sleep Sub-Score (0-100)
+    let sleepSub = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
+    document.getElementById('sleepScore').innerText = sleepSub;
+    
+    // Potential Score (If ML and Steps were maxed)
+    let potential = Math.round(35 + 35 + s_len + s_time + s_cold + s_scroll);
+    
+    // DOM Updates
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
-    document.getElementById('status').style.opacity = total >= 90 ? "1" : "0";
-    document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total/100)*6}%)`;
+    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
     
-    localStorage.setItem('h_ml', ml); localStorage.setItem('h_steps', steps); localStorage.setItem('h_sleep', sleepHrs);
-    localStorage.setItem('h_bt', bedtimeVal);
+    // Toggles UI
+    document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
+    document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
+
+    const brightness = 4 + (total / 100) * 6;
+    document.body.style.backgroundColor = `hsl(170, 40%, ${brightness}%)`;
 }
 
-window.onload = () => {
-    document.getElementById('ml').value = localStorage.getItem('h_ml') || "";
-    document.getElementById('steps').value = localStorage.getItem('h_steps') || "";
-    sleepHrs = parseFloat(localStorage.getItem('h_sleep')) || 0;
-    document.getElementById('sleepDisplay').innerText = sleepHrs;
-    document.getElementById('bedtime').value = localStorage.getItem('h_bt') || 23;
-    updateBedtimeLabel();
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 }
+setInterval(updateClock, 1000); updateClock();
+
+function resetDay() { localStorage.clear(); location.reload(); }
 </script>
 </body>
 </html>
