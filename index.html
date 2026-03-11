@@ -47,7 +47,7 @@
         .gauge-box {
             position: relative;
             width: 260px;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 10px auto;
         }
 
         .gauge-svg { width: 100%; }
@@ -73,7 +73,6 @@
             stroke-linecap: round;
         }
 
-        /* Sleep Score Badge - Refined Position */
         .sleep-badge {
             position: absolute;
             left: -35px;
@@ -101,6 +100,56 @@
 
         .score-num { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: -3px; }
         
+        .time-blocks {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            padding: 0 40px;
+        }
+        
+        .block {
+            flex: 1;
+            height: 3px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .block-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 1s ease;
+            box-shadow: 0 0 5px rgba(255,255,255,0.2);
+        }
+
+        .block-label {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 6px;
+            color: rgba(255,255,255,0.15);
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        /* Active Block UI */
+        .active-block .block-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
         .optimal-text {
             font-size: 10px;
             letter-spacing: 4px;
@@ -112,90 +161,20 @@
         }
 
         .inputs { display: flex; flex-direction: column; gap: 18px; padding: 0 10px; }
-        
-        .section-label {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.2);
-            text-align: left;
-            margin-bottom: -5px;
-            padding-left: 5px;
-        }
-
-        .input-row { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: rgba(255,255,255,0.03);
-            padding: 10px 14px;
-            border-radius: 8px;
-        }
-
+        .section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.2); text-align: left; margin-bottom: -5px; padding-left: 5px; }
+        .input-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: 8px; }
         label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
-        
-        input[type="number"] {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            outline: none;
-            width: 60px;
-            text-align: right;
-            font-size: 14px;
-        }
+        input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; outline: none; width: 60px; text-align: right; font-size: 14px; }
 
-        /* Sleek Slider Styling */
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 80px;
-            background: transparent;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.1);
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            background: #fff;
-            margin-top: -5px;
-        }
+        input[type="range"] { -webkit-appearance: none; width: 80px; background: transparent; }
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #fff; margin-top: -5px; }
 
         .time-label { font-size: 12px; color: #fff; width: 50px; text-align: right; font-variant-numeric: tabular-nums; }
-
-        .toggle-btn {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.3);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            margin: 0 4px;
-        }
-
+        .toggle-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); padding: 8px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; transition: all 0.3s ease; flex: 1; margin: 0 4px; }
         .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.1); }
-
         .stepper { display: flex; align-items: center; gap: 12px; }
-        .step-btn { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            color: white; 
-            width: 26px; 
-            height: 26px; 
-            border-radius: 6px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 18px;
-        }
-
+        .step-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .controls-row { display: flex; gap: 10px; margin-top: 5px; justify-content: center; }
         button.reset-btn { background: transparent; border: none; color: rgba(255,255,255,0.15); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 10px; }
     </style>
@@ -216,6 +195,13 @@
             <h1 id="score" class="score-num">0</h1>
             <div id="optimalLabel" class="optimal-text">Optimal</div>
         </div>
+    </div>
+
+    <div class="time-blocks">
+        <div class="block" id="block1"><div id="b1" class="block-fill"></div><div class="block-label">4AM-8AM</div></div>
+        <div class="block" id="block2"><div id="b2" class="block-fill"></div><div class="block-label">8AM-12PM</div></div>
+        <div class="block" id="block3"><div id="b3" class="block-fill"></div><div class="block-label">12PM-4PM</div></div>
+        <div class="block" id="block4"><div id="b4" class="block-fill"></div><div class="block-label">4PM-8PM</div></div>
     </div>
 
     <div class="inputs">
@@ -262,6 +248,7 @@
 let sleepHrs = 0;
 let cold = false;
 let scroll = false;
+let blockPoints = [0, 0, 0, 0]; 
 
 function stepSleep(v) { 
     sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); 
@@ -279,47 +266,80 @@ function update() {
     const steps = document.getElementById('steps').value || 0;
     const bedTime = parseFloat(document.getElementById('sleepTime').value);
     
-    // UI Update for Sleep Time
-    let h = Math.floor(bedTime % 24);
-    let m = (bedTime % 1) * 60;
-    document.getElementById('timeVal').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+    let now = new Date();
+    let h_now = now.getHours();
     
-    // Scoring Logic (Matches your requested weights)
+    // Scoring Logic
     let s_ml = Math.min((ml / 2000) * 35, 35);
     let s_steps = Math.min((steps / 10000) * 35, 35);
     let s_len = Math.min((sleepHrs / 8) * 21, 21);
-    
     let s_time = 0;
     if (bedTime <= 23) s_time = 5;
     else if (bedTime < 25.5) s_time = 5 * (1 - (bedTime - 23) / 2.5);
-    
     let s_cold = cold ? 2 : 0;
     let s_scroll = scroll ? 2 : 0;
     
     let total = Math.round(s_ml + s_steps + s_len + s_time + s_cold + s_scroll);
+    let activePoints = s_ml + s_steps;
+
+    // Reset active indicator classes
+    for(let i=1; i<=4; i++) document.getElementById(`block${i}`).classList.remove('active-block');
+
+    // Attribute points & Mark active block
+    if (h_now >= 4 && h_now < 8) {
+        blockPoints[0] = activePoints;
+        document.getElementById('block1').classList.add('active-block');
+    } else if (h_now >= 8 && h_now < 12) {
+        blockPoints[1] = activePoints;
+        document.getElementById('block2').classList.add('active-block');
+    } else if (h_now >= 12 && h_now < 16) {
+        blockPoints[2] = activePoints;
+        document.getElementById('block3').classList.add('active-block');
+    } else if (h_now >= 16 && h_now < 20) {
+        blockPoints[3] = activePoints;
+        document.getElementById('block4').classList.add('active-block');
+    }
+
+    for(let i=0; i<4; i++) {
+        let percent = Math.min((blockPoints[i] / 70) * 100, 100);
+        document.getElementById(`b${i+1}`).style.width = percent + '%';
+    }
     
-    // Sleep Sub-Score (0-100)
-    let sleepSub = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
-    document.getElementById('sleepScore').innerText = sleepSub;
+    let bt_h = Math.floor(bedTime % 24);
+    let bt_m = (bedTime % 1) * 60;
+    document.getElementById('timeVal').innerText = `${bt_h.toString().padStart(2,'0')}:${bt_m.toString().padStart(2,'0')}`;
     
-    // Potential Score Overlay
-    let potential = Math.round(35 + 35 + s_len + s_time + s_cold + s_scroll);
-    
-    // DOM Updates
+    document.getElementById('sleepScore').innerText = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
-    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
-    
-    // Optimal Label Logic
+    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (Math.round(35 + 35 + s_len + s_time + s_cold + s_scroll) / 100) * 157;
     document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
-    
-    // Toggles UI
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
 
-    // Background Brightness logic
-    const brightness = 4 + (total / 100) * 6;
-    document.body.style.backgroundColor = `hsl(170, 40%, ${brightness}%)`;
+    document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total / 100) * 6}%)`;
+    saveState();
+}
+
+function saveState() {
+    const state = { ml: document.getElementById('ml').value, steps: document.getElementById('steps').value, sleepHrs, cold, scroll, bedTime: document.getElementById('sleepTime').value, blockPoints };
+    localStorage.setItem('h_pro_state_v2', JSON.stringify(state));
+}
+
+function loadState() {
+    const saved = localStorage.getItem('h_pro_state_v2');
+    if (saved) {
+        const s = JSON.parse(saved);
+        document.getElementById('ml').value = s.ml;
+        document.getElementById('steps').value = s.steps;
+        sleepHrs = s.sleepHrs;
+        cold = s.cold;
+        scroll = s.scroll;
+        document.getElementById('sleepTime').value = s.bedTime;
+        blockPoints = s.blockPoints || [0,0,0,0];
+        document.getElementById('sleepDisplay').innerText = sleepHrs;
+        update();
+    }
 }
 
 function updateClock() {
@@ -328,15 +348,14 @@ function updateClock() {
 }
 setInterval(updateClock, 1000); 
 updateClock();
+window.onload = loadState;
 
 function resetDay() { 
-    if(confirm("Reset all daily data?")) {
+    if(confirm("Reset System?")) {
         localStorage.clear(); 
         location.reload(); 
     }
 }
-
-// Initial state load could go here if you want persistence
 </script>
 </body>
 </html>
