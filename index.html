@@ -41,23 +41,21 @@
         .container {
             width: 320px;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 20px;
         }
 
         .gauge-box {
             position: relative;
             width: 260px;
-            margin: 0 auto 20px auto;
+            margin: 0 auto 30px auto;
         }
 
         .gauge-svg { width: 100%; }
-
         .gauge-bg { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 4; }
         
-        /* The "Potential" Ghost Bar */
         .gauge-potential {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.15);
+            stroke: rgba(255, 255, 255, 0.12);
             stroke-width: 4;
             stroke-dasharray: 157;
             stroke-dashoffset: 157;
@@ -75,21 +73,23 @@
             stroke-linecap: round;
         }
 
-        /* Sleep Score Badge - Left of Gauge */
+        /* Sleep Score Badge - Refined Position */
         .sleep-badge {
             position: absolute;
-            left: -15px;
+            left: -35px;
             top: 50%;
             transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(255,255,255,0.2);
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.2);
         }
 
         .center-content {
@@ -99,40 +99,105 @@
             transform: translate(-50%, -40%);
         }
 
-        .score-num { font-size: 64px; font-weight: 200; margin: 0; letter-spacing: -2px; }
-
-        .inputs { display: flex; flex-direction: column; gap: 14px; padding: 0 20px; }
-        .input-row { display: flex; justify-content: space-between; align-items: center; }
-        label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); }
+        .score-num { font-size: 72px; font-weight: 200; margin: 0; letter-spacing: -3px; }
         
-        input[type="number"], input[type="range"] {
-            background: transparent;
-            border: none;
-            color: white;
-            outline: none;
+        .optimal-text {
+            font-size: 10px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-top: -10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
-        input[type="number"] { border-bottom: 1px solid rgba(255,255,255,0.1); width: 50px; text-align: right; }
+        .inputs { display: flex; flex-direction: column; gap: 18px; padding: 0 10px; }
         
-        .time-label { font-size: 11px; color: #8b949e; width: 60px; text-align: right; }
+        .section-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.2);
+            text-align: left;
+            margin-bottom: -5px;
+            padding-left: 5px;
+        }
+
+        .input-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(255,255,255,0.03);
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
+        
+        input[type="number"] {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+            width: 60px;
+            text-align: right;
+            font-size: 14px;
+        }
+
+        /* Sleek Slider Styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 80px;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #fff;
+            margin-top: -5px;
+        }
+
+        .time-label { font-size: 12px; color: #fff; width: 50px; text-align: right; font-variant-numeric: tabular-nums; }
 
         .toggle-btn {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
             color: rgba(255,255,255,0.3);
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 4px;
         }
 
-        .toggle-btn.active { border-color: #fff; color: #fff; }
+        .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.1); }
 
-        .stepper { display: flex; align-items: center; gap: 8px; }
-        .step-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: white; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .stepper { display: flex; align-items: center; gap: 12px; }
+        .step-btn { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: white; 
+            width: 26px; 
+            height: 26px; 
+            border-radius: 6px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 18px;
+        }
 
-        .controls-row { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
-        button.update-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 4px; font-size: 10px; text-transform: uppercase; }
+        .controls-row { display: flex; gap: 10px; margin-top: 5px; justify-content: center; }
+        button.reset-btn { background: transparent; border: none; color: rgba(255,255,255,0.15); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 10px; }
     </style>
 </head>
 <body>
@@ -149,23 +214,12 @@
         </svg>
         <div class="center-content">
             <h1 id="score" class="score-num">0</h1>
+            <div id="optimalLabel" class="optimal-text">Optimal</div>
         </div>
     </div>
 
     <div class="inputs">
-        <div class="input-row">
-            <label>Sleep Time</label>
-            <input type="range" id="sleepTime" min="21" max="26" step="0.5" value="23" oninput="update()">
-            <span class="time-label" id="timeVal">23:00</span>
-        </div>
-        <div class="input-row">
-            <label>Sleep Duration</label>
-            <div class="stepper">
-                <div class="step-btn" onclick="stepSleep(-0.5)">−</div>
-                <span id="sleepDisplay" style="font-size:14px; width:30px;">0</span>
-                <div class="step-btn" onclick="stepSleep(0.5)">+</div>
-            </div>
-        </div>
+        <div class="section-label">Performance</div>
         <div class="input-row">
             <label>Hydration (ml)</label>
             <input type="number" id="ml" placeholder="0" oninput="update()">
@@ -174,12 +228,32 @@
             <label>Steps</label>
             <input type="number" id="steps" placeholder="0" oninput="update()">
         </div>
-        <div class="input-row" style="justify-content: space-around;">
-            <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ Shower</button>
-            <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">📵 No Scroll</button>
+
+        <div class="section-label">Morning Levers</div>
+        <div class="input-row" style="background:none; padding:0;">
+            <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ SHOWER</button>
+            <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">📵 NO SCROLL</button>
         </div>
+
+        <div class="section-label">Recovery</div>
+        <div class="input-row">
+            <label>Bedtime</label>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <input type="range" id="sleepTime" min="21" max="26" step="0.5" value="23" oninput="update()">
+                <span class="time-label" id="timeVal">23:00</span>
+            </div>
+        </div>
+        <div class="input-row">
+            <label>Duration</label>
+            <div class="stepper">
+                <div class="step-btn" onclick="stepSleep(-0.5)">−</div>
+                <span id="sleepDisplay" style="font-size:14px; width:25px;">0</span>
+                <div class="step-btn" onclick="stepSleep(0.5)">+</div>
+            </div>
+        </div>
+
         <div class="controls-row">
-            <button class="update-btn" onclick="resetDay()">Reset Day</button>
+            <button class="reset-btn" onclick="resetDay()">Reset System</button>
         </div>
     </div>
 </div>
@@ -189,8 +263,16 @@ let sleepHrs = 0;
 let cold = false;
 let scroll = false;
 
-function stepSleep(v) { sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); document.getElementById('sleepDisplay').innerText = sleepHrs; update(); }
-function toggle(t) { if(t==='cold') cold=!cold; else scroll=!scroll; update(); }
+function stepSleep(v) { 
+    sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); 
+    document.getElementById('sleepDisplay').innerText = sleepHrs; 
+    update(); 
+}
+
+function toggle(t) { 
+    if(t==='cold') cold=!cold; else scroll=!scroll; 
+    update(); 
+}
 
 function update() {
     const ml = document.getElementById('ml').value || 0;
@@ -202,12 +284,11 @@ function update() {
     let m = (bedTime % 1) * 60;
     document.getElementById('timeVal').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
     
-    // Scoring Logic
+    // Scoring Logic (Matches your requested weights)
     let s_ml = Math.min((ml / 2000) * 35, 35);
     let s_steps = Math.min((steps / 10000) * 35, 35);
     let s_len = Math.min((sleepHrs / 8) * 21, 21);
     
-    // Sleep Time (Max 5): 21:00-23:00 = 5pts, 01:30+ = 0pts
     let s_time = 0;
     if (bedTime <= 23) s_time = 5;
     else if (bedTime < 25.5) s_time = 5 * (1 - (bedTime - 23) / 2.5);
@@ -221,7 +302,7 @@ function update() {
     let sleepSub = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
     document.getElementById('sleepScore').innerText = sleepSub;
     
-    // Potential Score (If ML and Steps were maxed)
+    // Potential Score Overlay
     let potential = Math.round(35 + 35 + s_len + s_time + s_cold + s_scroll);
     
     // DOM Updates
@@ -229,10 +310,14 @@ function update() {
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
     
+    // Optimal Label Logic
+    document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
+    
     // Toggles UI
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
 
+    // Background Brightness logic
     const brightness = 4 + (total / 100) * 6;
     document.body.style.backgroundColor = `hsl(170, 40%, ${brightness}%)`;
 }
@@ -241,9 +326,17 @@ function updateClock() {
     const now = new Date();
     document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 }
-setInterval(updateClock, 1000); updateClock();
+setInterval(updateClock, 1000); 
+updateClock();
 
-function resetDay() { localStorage.clear(); location.reload(); }
+function resetDay() { 
+    if(confirm("Reset all daily data?")) {
+        localStorage.clear(); 
+        location.reload(); 
+    }
+}
+
+// Initial state load could go here if you want persistence
 </script>
 </body>
 </html>
