@@ -121,7 +121,7 @@
         input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; outline: none; width: 50px; text-align: right; font-size: 14px; }
         
         .sync-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; transition: all 0.2s; }
-        
+
         input[type="range"] { -webkit-appearance: none; width: 80px; background: transparent; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #fff; margin-top: -5px; }
@@ -131,13 +131,8 @@
         .toggle-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 10px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; flex: 1; margin: 0 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.15); box-shadow: inset 0 1px 10px rgba(255,255,255,0.05); }
         
-        /* HEAVY BRAIN: Dotted border and greyed theme */
-        .toggle-btn#fogBtn.active { 
-            border: 2px dotted rgba(255, 255, 255, 0.4); 
-            color: #888; 
-            background: rgba(255,255,255,0.05); 
-            box-shadow: none; 
-        }
+        /* Dashed border for Heavy Brain active state */
+        .toggle-btn#fogBtn.active { border: 1px dashed rgba(255,255,255,0.4); color: #888; background: rgba(255,255,255,0.05); box-shadow: none; }
 
         .stepper { display: flex; align-items: center; gap: 12px; }
         .step-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
@@ -260,41 +255,41 @@ function calculateNonLinear(val, target, max, pointsMax) {
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
-    const bedTime = parseFloat(document.getElementById('sleepTime').value); // 22 to 27 (10pm to 3am)
+    const bedTime = parseFloat(document.getElementById('sleepTime').value);
     
     // Benchmarks: 2.1L and 11k steps
     let s_ml = calculateNonLinear(ml, 1050, 2100, 35);
     let s_steps = calculateNonLinear(steps, 5500, 11000, 35);
     
-    // Sleep Duration: 8hrs = Max (21), drops to 0 at 3hrs or less
+    // Sleep Duration: Max 21 points at 8 hours. 0 at 3 hours.
     let s_len = 0;
     if (sleepHrs > 3) {
         s_len = Math.min(((sleepHrs - 3) / (8 - 3)) * 21, 21);
     }
     
-    // Sleep Time: Max 5 before 11pm (23). Drops to 0 at 1am (25).
-    // 1:30am (25.5) = -1. 2am+ (26+) = -2.
+    // Sleep Time: Max 5 points.
     let s_time = 0;
     if (bedTime <= 23) {
         s_time = 5;
-    } else if (bedTime <= 25) {
-        s_time = 5 * (1 - (bedTime - 23) / 2); // Linear drop to 0
-    } else if (bedTime <= 25.5) {
+    } else if (bedTime <= 25) { // Linearly drop to 1 AM (25:00)
+        s_time = 5 * (1 - (bedTime - 23) / 2);
+    } else if (bedTime <= 25.5) { // 1:30 AM
         s_time = -1;
-    } else {
+    } else { // 2 AM or later
         s_time = -2;
     }
     
-    // Heavy Brain Penalty (15%)
+    // Penalty logic (15% for Heavy Brain)
     let baseSleepScore = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
     let finalSleepScore = brainFog ? Math.round(baseSleepScore * 0.85) : baseSleepScore;
     let sleepContrib = brainFog ? ((s_len + s_time) * 0.85) : (s_len + s_time);
     
-    let total = Math.max(0, Math.round(s_ml + s_steps + sleepContrib + (cold?2:0) + (scroll?2:0)));
+    let total = Math.round(s_ml + s_steps + sleepContrib + (cold?2:0) + (scroll?2:0));
     
     // Display Time logic
-    let displayH = Math.floor(bedTime % 24);
-    document.getElementById('timeVal').innerText = `${displayH.toString().padStart(2,'0')}:${((bedTime % 1)*60).toString().padStart(2,'0')}`;
+    let h = Math.floor(bedTime % 24);
+    let m = (bedTime % 1) * 60;
+    document.getElementById('timeVal').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
     
     document.getElementById('sleepBadge').innerText = finalSleepScore;
     document.getElementById('stepBadge').innerText = Math.round((s_steps / 35) * 100);
@@ -302,15 +297,13 @@ function update() {
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     
-    let potSleep = brainFog ? ((21 + 5) * 0.85) : (21 + 5);
-    let potential = Math.round(35 + 35 + potSleep + (cold?2:0) + (scroll?2:0));
-    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (Math.min(100, potential) / 100) * 157;
+    let potential = Math.round(35 + 35 + sleepContrib + (cold?2:0) + (scroll?2:0));
+    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
     
     document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('fogBtn').className = brainFog ? 'toggle-btn active' : 'toggle-btn';
-    
     document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total / 100) * 6}%)`;
     saveState();
 }
@@ -326,7 +319,7 @@ function loadState() {
         document.getElementById('ml').value = s.ml;
         document.getElementById('steps').value = s.steps;
         sleepHrs = s.sleepHrs; cold = s.cold; scroll = s.scroll; brainFog = s.brainFog;
-        document.getElementById('sleepTime').value = s.bedTime || 23;
+        document.getElementById('sleepTime').value = s.bedTime;
         document.getElementById('sleepDisplay').innerText = sleepHrs;
         update();
     }
