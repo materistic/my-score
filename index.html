@@ -75,27 +75,31 @@
 
         .badge {
             position: absolute;
-            width: 34px;
-            height: 34px;
+            width: 46px;
+            height: 46px;
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 50%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
-            background: rgba(0,0,0,0.6);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
         }
 
-        @keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); } 50% { transform: scale(1.15); box-shadow: 0 0 10px 2px rgba(255, 77, 77, 0.2); } 100% { transform: scale(1); } }
-        @keyframes pulse-blue { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 166, 255, 0.4); } 50% { transform: scale(1.15); box-shadow: 0 0 10px 2px rgba(77, 166, 255, 0.2); } 100% { transform: scale(1); } }
+        .badge-icon { font-size: 14px; margin-bottom: 1px; }
+        .badge-val { font-size: 12px; font-weight: 500; }
+
+        @keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); } 50% { transform: scale(1.1); box-shadow: 0 0 15px 3px rgba(255, 77, 77, 0.2); } 100% { transform: scale(1); } }
+        @keyframes pulse-blue { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(77, 166, 255, 0.4); } 50% { transform: scale(1.1); box-shadow: 0 0 15px 3px rgba(77, 166, 255, 0.2); } 100% { transform: scale(1); } }
 
         .pulse-red { animation: pulse-red 0.8s ease-out; }
         .pulse-blue { animation: pulse-blue 0.8s ease-out; }
 
-        .sleep-badge { left: -25px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.6); }
-        .step-badge { right: -12px; top: 20%; color: #ff4d4d; border-color: rgba(255, 77, 77, 0.2); }
-        .hydro-badge { right: -30px; top: 60%; color: #4da6ff; border-color: rgba(77, 166, 255, 0.2); }
+        .sleep-badge { left: -30px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.8); }
+        .step-badge { right: -15px; top: 15%; color: #ff4d4d; border-color: rgba(255, 77, 77, 0.3); }
+        .hydro-badge { right: -35px; top: 65%; color: #4da6ff; border-color: rgba(77, 166, 255, 0.3); }
 
         .center-content {
             position: absolute;
@@ -108,7 +112,7 @@
         .optimal-text { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: -10px; opacity: 0; transition: opacity 0.5s ease; }
 
         .inputs { display: flex; flex-direction: column; gap: 18px; padding: 0 10px; }
-        .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.9); text-align: left; margin-bottom: -5px; padding-left: 5px; font-weight: 600; }
+        .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #fff; text-align: left; margin-bottom: -5px; padding-left: 5px; font-weight: 700; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
         
         .input-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.05); }
         label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
@@ -117,28 +121,29 @@
         input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; outline: none; width: 50px; text-align: right; font-size: 14px; }
         
         .sync-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; transition: all 0.2s; }
-        .sync-btn:active { background: rgba(255,255,255,0.1); color: #fff; }
-
+        
         input[type="range"] { -webkit-appearance: none; width: 80px; background: transparent; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 12px; width: 12px; border-radius: 50%; background: #fff; margin-top: -5px; }
 
         .time-label { font-size: 12px; color: #fff; width: 50px; text-align: right; font-variant-numeric: tabular-nums; }
         
-        /* Lever Toggles */
         .toggle-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 10px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; flex: 1; margin: 0 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.15); box-shadow: inset 0 1px 10px rgba(255,255,255,0.05); }
         
-        /* Heavy Brain specific active state */
-        .toggle-btn#fogBtn.active { border-color: rgba(255,255,255,0.2); color: #888; background: rgba(255,255,255,0.05); box-shadow: none; }
+        /* HEAVY BRAIN: Dotted border and greyed theme */
+        .toggle-btn#fogBtn.active { 
+            border: 2px dotted rgba(255, 255, 255, 0.4); 
+            color: #888; 
+            background: rgba(255,255,255,0.05); 
+            box-shadow: none; 
+        }
 
         .stepper { display: flex; align-items: center; gap: 12px; }
         .step-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .step-btn:active { background: rgba(255,255,255,0.15); }
 
         .controls-row { display: flex; gap: 10px; margin-top: 5px; justify-content: center; }
         button.reset-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 10px 15px; border-radius: 6px; }
-        button.reset-btn:active { color: #fff; background: rgba(255,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -147,9 +152,18 @@
 
 <div class="container">
     <div class="gauge-box">
-        <div class="badge sleep-badge" id="sleepBadge">--</div>
-        <div class="badge step-badge" id="stepBadge">--</div>
-        <div class="badge hydro-badge" id="hydroBadge">--</div>
+        <div class="badge sleep-badge">
+            <span class="badge-icon">🛏️</span>
+            <span class="badge-val" id="sleepBadge">--</span>
+        </div>
+        <div class="badge step-badge" id="stepBadgeOuter">
+            <span class="badge-icon">👣</span>
+            <span class="badge-val" id="stepBadge">--</span>
+        </div>
+        <div class="badge hydro-badge" id="hydroBadgeOuter">
+            <span class="badge-icon">💧</span>
+            <span class="badge-val" id="hydroBadge">--</span>
+        </div>
         
         <svg class="gauge-svg" viewBox="00 0 120 60">
             <defs>
@@ -199,7 +213,7 @@
         <div class="input-row">
             <label>Bedtime</label>
             <div style="display:flex; align-items:center; gap:10px;">
-                <input type="range" id="sleepTime" min="21" max="26" step="0.5" value="23" oninput="update()">
+                <input type="range" id="sleepTime" min="22" max="27" step="0.5" value="23" oninput="update()">
                 <span class="time-label" id="timeVal">23:00</span>
             </div>
         </div>
@@ -224,21 +238,11 @@ let cold = false;
 let scroll = false;
 let brainFog = false;
 
-function stepSleep(v) { 
-    sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); 
-    document.getElementById('sleepDisplay').innerText = sleepHrs; 
-    update(); 
-}
-
-function toggle(t) { 
-    if(t==='cold') cold=!cold; 
-    else if(t==='scroll') scroll=!scroll;
-    else brainFog=!brainFog;
-    update(); 
-}
+function stepSleep(v) { sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); document.getElementById('sleepDisplay').innerText = sleepHrs; update(); }
+function toggle(t) { if(t==='cold') cold=!cold; else if(t==='scroll') scroll=!scroll; else brainFog=!brainFog; update(); }
 
 function sync(type) {
-    const badge = type === 'hydro' ? document.getElementById('hydroBadge') : document.getElementById('stepBadge');
+    const badge = type === 'hydro' ? document.getElementById('hydroBadgeOuter') : document.getElementById('stepBadgeOuter');
     const animClass = type === 'hydro' ? 'pulse-blue' : 'pulse-red';
     badge.classList.remove(animClass);
     void badge.offsetWidth; 
@@ -250,50 +254,57 @@ function calculateNonLinear(val, target, max, pointsMax) {
     if (val <= 0) return 0;
     if (val >= max) return pointsMax;
     if (val <= target) return (val / target) * (pointsMax * 0.6);
-    const remainingVal = val - target;
-    const remainingTarget = max - target;
-    return (pointsMax * 0.6) + (remainingVal / remainingTarget) * (pointsMax * 0.4);
+    return (pointsMax * 0.6) + ((val - target) / (max - target)) * (pointsMax * 0.4);
 }
 
 function update() {
     const ml = document.getElementById('ml').value || 0;
     const steps = document.getElementById('steps').value || 0;
-    const bedTime = parseFloat(document.getElementById('sleepTime').value);
+    const bedTime = parseFloat(document.getElementById('sleepTime').value); // 22 to 27 (10pm to 3am)
     
-    let s_ml = calculateNonLinear(ml, 1000, 2000, 35);
-    let s_steps = calculateNonLinear(steps, 5000, 10000, 35);
+    // Benchmarks: 2.1L and 11k steps
+    let s_ml = calculateNonLinear(ml, 1050, 2100, 35);
+    let s_steps = calculateNonLinear(steps, 5500, 11000, 35);
     
-    // Sleep logic (26 points max: 21 len + 5 time)
-    let s_len = Math.min((sleepHrs / 8) * 21, 21);
+    // Sleep Duration: 8hrs = Max (21), drops to 0 at 3hrs or less
+    let s_len = 0;
+    if (sleepHrs > 3) {
+        s_len = Math.min(((sleepHrs - 3) / (8 - 3)) * 21, 21);
+    }
+    
+    // Sleep Time: Max 5 before 11pm (23). Drops to 0 at 1am (25).
+    // 1:30am (25.5) = -1. 2am+ (26+) = -2.
     let s_time = 0;
-    if (bedTime <= 23) s_time = 5;
-    else if (bedTime < 25.5) s_time = 5 * (1 - (bedTime - 23) / 2.5);
+    if (bedTime <= 23) {
+        s_time = 5;
+    } else if (bedTime <= 25) {
+        s_time = 5 * (1 - (bedTime - 23) / 2); // Linear drop to 0
+    } else if (bedTime <= 25.5) {
+        s_time = -1;
+    } else {
+        s_time = -2;
+    }
     
-    // Sleep Score calculation
+    // Heavy Brain Penalty (15%)
     let baseSleepScore = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
-    let finalSleepScore = brainFog ? Math.round(baseSleepScore * 0.9) : baseSleepScore;
+    let finalSleepScore = brainFog ? Math.round(baseSleepScore * 0.85) : baseSleepScore;
+    let sleepContrib = brainFog ? ((s_len + s_time) * 0.85) : (s_len + s_time);
     
-    // Apply brain fog penalty to the main score components
-    let sleepContribution = brainFog ? ((s_len + s_time) * 0.9) : (s_len + s_time);
+    let total = Math.max(0, Math.round(s_ml + s_steps + sleepContrib + (cold?2:0) + (scroll?2:0)));
     
-    let s_cold = cold ? 2 : 0;
-    let s_scroll = scroll ? 2 : 0;
-    
-    let total = Math.round(s_ml + s_steps + sleepContribution + s_cold + s_scroll);
-    
-    let bt_h = Math.floor(bedTime % 24);
-    let bt_m = (bedTime % 1) * 60;
-    document.getElementById('timeVal').innerText = `${bt_h.toString().padStart(2,'0')}:${bt_m.toString().padStart(2,'0')}`;
+    // Display Time logic
+    let displayH = Math.floor(bedTime % 24);
+    document.getElementById('timeVal').innerText = `${displayH.toString().padStart(2,'0')}:${((bedTime % 1)*60).toString().padStart(2,'0')}`;
     
     document.getElementById('sleepBadge').innerText = finalSleepScore;
     document.getElementById('stepBadge').innerText = Math.round((s_steps / 35) * 100);
     document.getElementById('hydroBadge').innerText = Math.round((s_ml / 35) * 100);
-    
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     
-    let potential = Math.round(35 + 35 + sleepContribution + s_cold + s_scroll);
-    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
+    let potSleep = brainFog ? ((21 + 5) * 0.85) : (21 + 5);
+    let potential = Math.round(35 + 35 + potSleep + (cold?2:0) + (scroll?2:0));
+    document.getElementById('potentialPath').style.strokeDashoffset = 157 - (Math.min(100, potential) / 100) * 157;
     
     document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
@@ -305,25 +316,17 @@ function update() {
 }
 
 function saveState() {
-    localStorage.setItem('h_pro_state_v4', JSON.stringify({
-        ml: document.getElementById('ml').value,
-        steps: document.getElementById('steps').value,
-        sleepHrs, cold, scroll, brainFog,
-        bedTime: document.getElementById('sleepTime').value
-    }));
+    localStorage.setItem('h_pro_v6', JSON.stringify({ ml: document.getElementById('ml').value, steps: document.getElementById('steps').value, sleepHrs, cold, scroll, brainFog, bedTime: document.getElementById('sleepTime').value }));
 }
 
 function loadState() {
-    const saved = localStorage.getItem('h_pro_state_v4');
+    const saved = localStorage.getItem('h_pro_v6');
     if (saved) {
         const s = JSON.parse(saved);
         document.getElementById('ml').value = s.ml;
         document.getElementById('steps').value = s.steps;
-        sleepHrs = s.sleepHrs;
-        cold = s.cold;
-        scroll = s.scroll;
-        brainFog = s.brainFog || false;
-        document.getElementById('sleepTime').value = s.bedTime;
+        sleepHrs = s.sleepHrs; cold = s.cold; scroll = s.scroll; brainFog = s.brainFog;
+        document.getElementById('sleepTime').value = s.bedTime || 23;
         document.getElementById('sleepDisplay').innerText = sleepHrs;
         update();
     }
@@ -336,12 +339,7 @@ function updateClock() {
 setInterval(updateClock, 1000); updateClock();
 window.onload = loadState;
 
-function resetDay() { 
-    if(confirm("Reset System?")) {
-        localStorage.clear(); 
-        location.reload(); 
-    }
-}
+function resetDay() { if(confirm("Reset System?")) { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
