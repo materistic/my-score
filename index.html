@@ -39,7 +39,7 @@
         }
 
         .container {
-            width: 320px;
+            width: 340px;
             text-align: center;
             padding-top: 20px;
         }
@@ -83,7 +83,8 @@
             align-items: center;
             justify-content: center;
             font-size: 11px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.6);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
         @keyframes pulse-red { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); } 50% { transform: scale(1.15); box-shadow: 0 0 10px 2px rgba(255, 77, 77, 0.2); } 100% { transform: scale(1); } }
@@ -107,15 +108,16 @@
         .optimal-text { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: -10px; opacity: 0; transition: opacity 0.5s ease; }
 
         .inputs { display: flex; flex-direction: column; gap: 18px; padding: 0 10px; }
-        .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.9); text-align: left; margin-bottom: -5px; padding-left: 5px; font-weight: 700; }
+        .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.9); text-align: left; margin-bottom: -5px; padding-left: 5px; font-weight: 600; }
         
-        .input-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); }
+        .input-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 10px 14px; border-radius: 8px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.05); }
         label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); }
         
+        .sync-input-group { display: flex; align-items: center; gap: 10px; }
         input[type="number"] { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.1); color: white; outline: none; width: 50px; text-align: right; font-size: 14px; }
         
-        .sync-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: rgba(255,255,255,0.4); cursor: pointer; padding: 6px; display: flex; align-items: center; transition: all 0.2s; }
-        .sync-btn:active { background: rgba(255,255,255,0.2); color: #fff; }
+        .sync-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.2); cursor: pointer; padding: 6px; border-radius: 6px; display: flex; align-items: center; transition: all 0.2s; }
+        .sync-btn:active { background: rgba(255,255,255,0.1); color: #fff; }
 
         input[type="range"] { -webkit-appearance: none; width: 80px; background: transparent; }
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: rgba(255,255,255,0.1); }
@@ -123,15 +125,20 @@
 
         .time-label { font-size: 12px; color: #fff; width: 50px; text-align: right; font-variant-numeric: tabular-nums; }
         
-        /* Tactical Toggle Buttons */
-        .toggle-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 10px 8px; border-radius: 8px; font-size: 10px; cursor: pointer; transition: all 0.2s ease; flex: 1; margin: 0 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
-        .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.12); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+        /* Lever Toggles */
+        .toggle-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); padding: 10px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; transition: all 0.3s ease; flex: 1; margin: 0 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .toggle-btn.active { border-color: rgba(255,255,255,0.5); color: #fff; background: rgba(255,255,255,0.15); box-shadow: inset 0 1px 10px rgba(255,255,255,0.05); }
         
+        /* Heavy Brain specific active state */
+        .toggle-btn#fogBtn.active { border-color: rgba(255,255,255,0.2); color: #888; background: rgba(255,255,255,0.05); box-shadow: none; }
+
         .stepper { display: flex; align-items: center; gap: 12px; }
-        .step-btn { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
-        
+        .step-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); color: white; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .step-btn:active { background: rgba(255,255,255,0.15); }
+
         .controls-row { display: flex; gap: 10px; margin-top: 5px; justify-content: center; }
-        button.reset-btn { background: transparent; border: none; color: rgba(255,255,255,0.15); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 10px; }
+        button.reset-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.2); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 10px 15px; border-radius: 6px; }
+        button.reset-btn:active { color: #fff; background: rgba(255,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -144,10 +151,10 @@
         <div class="badge step-badge" id="stepBadge">--</div>
         <div class="badge hydro-badge" id="hydroBadge">--</div>
         
-        <svg class="gauge-svg" viewBox="0 0 120 70">
+        <svg class="gauge-svg" viewBox="00 0 120 60">
             <defs>
                 <pattern id="pattern-stripe" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                    <rect width="2" height="4" transform="translate(0,0)" fill="rgba(255,255,255,0.1)"></rect>
+                    <rect width="2" height="4" transform="translate(0,0)" fill="rgba(255,255,255,0.2)"></rect>
                 </pattern>
             </defs>
             <path class="gauge-bg" d="M10,60 A50,50 0 0,1 110,60" />
@@ -164,7 +171,7 @@
         <div class="section-label">Performance</div>
         <div class="input-row">
             <label>Hydration (ml)</label>
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div class="sync-input-group">
                 <input type="number" id="ml" placeholder="0">
                 <button class="sync-btn" onclick="sync('hydro')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6M21 13a9 9 0 1 1-3-7.7L21 8"/></svg>
@@ -173,7 +180,7 @@
         </div>
         <div class="input-row">
             <label>Steps</label>
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div class="sync-input-group">
                 <input type="number" id="steps" placeholder="0">
                 <button class="sync-btn" onclick="sync('steps')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6M21 13a9 9 0 1 1-3-7.7L21 8"/></svg>
@@ -181,11 +188,11 @@
             </div>
         </div>
 
-        <div class="section-label">Morning Levers</div>
-        <div class="input-row" style="background:none; padding:0; border:none;">
+        <div class="section-label">Levers</div>
+        <div class="input-row" style="background:none; padding:0; box-shadow:none;">
             <button id="coldBtn" class="toggle-btn" onclick="toggle('cold')">❄️ SHOWER</button>
             <button id="scrollBtn" class="toggle-btn" onclick="toggle('scroll')">📵 NO SCROLL</button>
-            <button id="fogBtn" class="toggle-btn" onclick="toggle('fog')">🧠 FOG</button>
+            <button id="fogBtn" class="toggle-btn" onclick="toggle('fog')">🧠 HEAVY</button>
         </div>
 
         <div class="section-label">Recovery</div>
@@ -215,7 +222,7 @@
 let sleepHrs = 0;
 let cold = false;
 let scroll = false;
-let fog = false;
+let brainFog = false;
 
 function stepSleep(v) { 
     sleepHrs = Math.max(0, Math.min(12, sleepHrs + v)); 
@@ -226,7 +233,7 @@ function stepSleep(v) {
 function toggle(t) { 
     if(t==='cold') cold=!cold; 
     else if(t==='scroll') scroll=!scroll;
-    else if(t==='fog') fog=!fog;
+    else brainFog=!brainFog;
     update(); 
 }
 
@@ -234,7 +241,7 @@ function sync(type) {
     const badge = type === 'hydro' ? document.getElementById('hydroBadge') : document.getElementById('stepBadge');
     const animClass = type === 'hydro' ? 'pulse-blue' : 'pulse-red';
     badge.classList.remove(animClass);
-    void badge.offsetWidth;
+    void badge.offsetWidth; 
     badge.classList.add(animClass);
     update();
 }
@@ -243,7 +250,9 @@ function calculateNonLinear(val, target, max, pointsMax) {
     if (val <= 0) return 0;
     if (val >= max) return pointsMax;
     if (val <= target) return (val / target) * (pointsMax * 0.6);
-    return (pointsMax * 0.6) + ((val - target) / (max - target)) * (pointsMax * 0.4);
+    const remainingVal = val - target;
+    const remainingTarget = max - target;
+    return (pointsMax * 0.6) + (remainingVal / remainingTarget) * (pointsMax * 0.4);
 }
 
 function update() {
@@ -253,41 +262,44 @@ function update() {
     
     let s_ml = calculateNonLinear(ml, 1000, 2000, 35);
     let s_steps = calculateNonLinear(steps, 5000, 10000, 35);
-    let s_len = Math.min((sleepHrs / 8) * 21, 21);
     
+    // Sleep logic (26 points max: 21 len + 5 time)
+    let s_len = Math.min((sleepHrs / 8) * 21, 21);
     let s_time = 0;
     if (bedTime <= 23) s_time = 5;
     else if (bedTime < 25.5) s_time = 5 * (1 - (bedTime - 23) / 2.5);
     
+    // Sleep Score calculation
+    let baseSleepScore = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
+    let finalSleepScore = brainFog ? Math.round(baseSleepScore * 0.9) : baseSleepScore;
+    
+    // Apply brain fog penalty to the main score components
+    let sleepContribution = brainFog ? ((s_len + s_time) * 0.9) : (s_len + s_time);
+    
     let s_cold = cold ? 2 : 0;
     let s_scroll = scroll ? 2 : 0;
     
-    let total = Math.round(s_ml + s_steps + s_len + s_time + s_cold + s_scroll);
+    let total = Math.round(s_ml + s_steps + sleepContribution + s_cold + s_scroll);
     
-    // UI Label Update
     let bt_h = Math.floor(bedTime % 24);
     let bt_m = (bedTime % 1) * 60;
     document.getElementById('timeVal').innerText = `${bt_h.toString().padStart(2,'0')}:${bt_m.toString().padStart(2,'0')}`;
     
-    // Sleep Score Logic with Fog Penalty
-    let sleepBase = Math.round(((s_len / 21) * 80) + ((s_time / 5) * 20));
-    if (fog) sleepBase = Math.round(sleepBase * 0.9);
-    
-    document.getElementById('sleepBadge').innerText = sleepBase;
+    document.getElementById('sleepBadge').innerText = finalSleepScore;
     document.getElementById('stepBadge').innerText = Math.round((s_steps / 35) * 100);
     document.getElementById('hydroBadge').innerText = Math.round((s_ml / 35) * 100);
     
     document.getElementById('score').innerText = total;
     document.getElementById('path').style.strokeDashoffset = 157 - (total / 100) * 157;
     
-    let potential = Math.round(35 + 35 + s_len + s_time + s_cold + s_scroll);
+    let potential = Math.round(35 + 35 + sleepContribution + s_cold + s_scroll);
     document.getElementById('potentialPath').style.strokeDashoffset = 157 - (potential / 100) * 157;
     
     document.getElementById('optimalLabel').style.opacity = total >= 70 ? "1" : "0";
     document.getElementById('coldBtn').className = cold ? 'toggle-btn active' : 'toggle-btn';
     document.getElementById('scrollBtn').className = scroll ? 'toggle-btn active' : 'toggle-btn';
-    document.getElementById('fogBtn').className = fog ? 'toggle-btn active' : 'toggle-btn';
-
+    document.getElementById('fogBtn').className = brainFog ? 'toggle-btn active' : 'toggle-btn';
+    
     document.body.style.backgroundColor = `hsl(170, 40%, ${4 + (total / 100) * 6}%)`;
     saveState();
 }
@@ -296,7 +308,7 @@ function saveState() {
     localStorage.setItem('h_pro_state_v4', JSON.stringify({
         ml: document.getElementById('ml').value,
         steps: document.getElementById('steps').value,
-        sleepHrs, cold, scroll, fog,
+        sleepHrs, cold, scroll, brainFog,
         bedTime: document.getElementById('sleepTime').value
     }));
 }
@@ -310,7 +322,7 @@ function loadState() {
         sleepHrs = s.sleepHrs;
         cold = s.cold;
         scroll = s.scroll;
-        fog = s.fog || false;
+        brainFog = s.brainFog || false;
         document.getElementById('sleepTime').value = s.bedTime;
         document.getElementById('sleepDisplay').innerText = sleepHrs;
         update();
